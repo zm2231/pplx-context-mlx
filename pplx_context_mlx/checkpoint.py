@@ -12,7 +12,7 @@ from .model import PplxContextualModel
 CHECKPOINT_0_6B = "perplexity-ai/pplx-embed-v2-context-0.6b"
 REVISION_0_6B = "6d1fddab0a18478acc0a51edd1e81333fe441095"
 _FILES = ["config.json", "tokenizer.json", "model.safetensors.index.json", "*.safetensors"]
-_DTYPES = {"float32": mx.float32, "float16": mx.float16, "bfloat16": mx.bfloat16}
+_DTYPES = {"float32": mx.float32, "float16": mx.float16}
 _KEEP_FP32 = ("contextual_projection.",)
 
 

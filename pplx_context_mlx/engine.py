@@ -58,12 +58,12 @@ class ContextualEngine:
         return output
 
     def encode(
-        self, documents: list[list[str]], batch_size: int = 32, normalize_embeddings: bool = False
+        self, documents: list[list[str]], batch_size: int = 32, *, normalize_embeddings: bool = False
     ) -> list[np.ndarray]:
         return self._encode(documents, self.project_documents, batch_size, normalize_embeddings)
 
     def encode_queries(
-        self, queries: list[list[str]], batch_size: int = 32, normalize_embeddings: bool = False
+        self, queries: list[list[str]], batch_size: int = 32, *, normalize_embeddings: bool = False
     ) -> list[np.ndarray]:
         return self._encode(queries, self.project_queries, batch_size, normalize_embeddings)
 
@@ -78,8 +78,8 @@ class ContextualEngine:
         self,
         images: list[Image.Image],
         batch_size: int = 1,
-        normalize_embeddings: bool = False,
         *,
+        normalize_embeddings: bool = False,
         chunks: int = 8,
         min_pixels: int = 16384,
         max_pixels: int = 1800000,

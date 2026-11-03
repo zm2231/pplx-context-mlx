@@ -22,4 +22,4 @@ bands = engine.encode_images([Image.open("page.png")], chunks=8, normalize_embed
 page_score = (bands @ query[0][0]).max()
 ```
 
-Parity against the upstream PyTorch model is recorded in `reports/`; regenerate with `scripts/make_reference.py` and `scripts/parity_report.py`. All reports compare against upstream at FP32, including the FP16 and BF16 runs.
+Parity against the upstream PyTorch model is recorded in `reports/`; regenerate with `scripts/make_reference.py` and `scripts/parity_report.py`. FP32 is the default and the parity mode. `dtype="float16"` halves the memory; its report also compares against upstream at FP32.

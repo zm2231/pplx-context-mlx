@@ -66,6 +66,11 @@ def test_batching_matches_one_at_a_time(engine):
         assert np.abs(left - right).max() <= 1
 
 
+def test_normalize_is_keyword_only(engine):
+    with pytest.raises(TypeError):
+        engine.encode_images([Image.new("RGB", (64, 64))], 1, True)
+
+
 def test_rejects_non_images(engine):
     with pytest.raises(ValueError, match="PIL images"):
         engine.prepare_images(["not an image"])
