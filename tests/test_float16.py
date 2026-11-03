@@ -5,6 +5,7 @@ import numpy as np
 import pytest
 from PIL import Image
 
+from pplx_context_mlx import engine as engine_module
 from pplx_context_mlx import load_model
 
 FIXTURES = Path(__file__).parent / "fixtures"
@@ -51,6 +52,10 @@ def test_images_within_float16_envelope(case, engine, reference):
     _check(engine.encode_images(images, batch_size=len(images), **options), f"image/{case['id']}", reference)
 
 
-def test_bfloat16_is_rejected():
+def test_bfloat16_is_rejected_before_any_download(monkeypatch):
+    def fail(*_args, **_kwargs):
+        raise AssertionError("resolved a checkpoint for an unsupported dtype")
+
+    monkeypatch.setattr(engine_module, "resolve_checkpoint", fail)
     with pytest.raises(ValueError, match="Unsupported dtype"):
         load_model(dtype="bfloat16")

@@ -40,9 +40,13 @@ def load_weights(path: Path, dtype: mx.Dtype) -> dict[str, mx.array]:
     return weights
 
 
-def load_checkpoint(path: Path, dtype: str = "float32") -> tuple[PplxContextualModel, ModelConfig]:
+def validate_dtype(dtype: str) -> None:
     if dtype not in _DTYPES:
         raise ValueError(f"Unsupported dtype {dtype!r}; choose from {sorted(_DTYPES)}")
+
+
+def load_checkpoint(path: Path, dtype: str = "float32") -> tuple[PplxContextualModel, ModelConfig]:
+    validate_dtype(dtype)
     config = ModelConfig.from_dict(json.loads((path / "config.json").read_text()))
     model = PplxContextualModel(config)
     model.load_weights(list(load_weights(path, _DTYPES[dtype]).items()), strict=True)

@@ -4,7 +4,12 @@ import mlx.core as mx
 import numpy as np
 from PIL import Image
 
-from .checkpoint import CHECKPOINT_0_6B, load_checkpoint, resolve_checkpoint
+from .checkpoint import (
+    CHECKPOINT_0_6B,
+    load_checkpoint,
+    resolve_checkpoint,
+    validate_dtype,
+)
 from .config import ModelConfig
 from .images import prepare_images
 from .model import PplxContextualModel, quantize_int8
@@ -104,6 +109,7 @@ class ContextualEngine:
 def load_model(
     path_or_repo: str = CHECKPOINT_0_6B, revision: str | None = None, dtype: str = "float32"
 ) -> ContextualEngine:
+    validate_dtype(dtype)
     path = resolve_checkpoint(path_or_repo, revision)
     model, config = load_checkpoint(path, dtype)
     return ContextualEngine(model, ContextualTokenizer(path, config), config)
