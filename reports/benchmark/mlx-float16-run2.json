@@ -1,0 +1,27 @@
+{
+  "runtime": "mlx-float16",
+  "load_s": 0.3227178340021055,
+  "peak_metal_gb": 2.28066132,
+  "query_ms": 6.950833500013687,
+  "queries_per_s_batch32": 589.49817474128,
+  "image_a4_8_bands_s": 0.9322482080024201,
+  "document_224_tokens_s": 0.029663207998964936,
+  "document_224_tokens_per_s": 7551.44217738743,
+  "document_1785_tokens_s": 0.21229174999461975,
+  "document_1785_tokens_per_s": 8408.240075486863,
+  "document_7137_tokens_s": 1.1856594999990193,
+  "document_7137_tokens_per_s": 6019.434753405934,
+  "chip": "Apple M4 Pro",
+  "memory_gb": 64,
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "load_average_before": [
+    2.02392578125,
+    3.08837890625,
+    9.4541015625
+  ],
+  "load_average_after": [
+    1.79248046875,
+    3.00244140625,
+    9.34912109375
+  ]
+}

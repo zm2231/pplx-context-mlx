@@ -1,0 +1,6 @@
+{"tokens": 13681, "chunks": 57, "dtype": "float16", "vectors": 57, "seconds": 2.96, "tokens_per_second": 4625, "weights_gb": 1.19, "peak_metal_gb": 2.68}
+{"tokens": 13681, "chunks": 57, "dtype": "float32", "vectors": 57, "seconds": 3.69, "tokens_per_second": 3709, "weights_gb": 2.38, "peak_metal_gb": 4.92}
+{"tokens": 29521, "chunks": 123, "dtype": "float16", "vectors": 123, "seconds": 10.35, "tokens_per_second": 2853, "weights_gb": 1.19, "peak_metal_gb": 4.04}
+{"tokens": 29521, "chunks": 123, "dtype": "float32", "vectors": 123, "seconds": 14.72, "tokens_per_second": 2005, "weights_gb": 2.38, "peak_metal_gb": 7.6}
+{"tokens": 59041, "chunks": 246, "dtype": "float16", "vectors": 246, "seconds": 36.27, "tokens_per_second": 1628, "weights_gb": 1.19, "peak_metal_gb": 6.65}
+{"tokens": 119041, "chunks": 496, "dtype": "float16", "vectors": 496, "seconds": 143.97, "tokens_per_second": 827, "weights_gb": 1.19, "peak_metal_gb": 12.2}

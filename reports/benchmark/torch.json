@@ -1,0 +1,72 @@
+{
+  "runtime": "torch-cpu-fp32-best-thread-count",
+  "load_s": 0.2213166659930721,
+  "query_ms": 72.14045849832473,
+  "queries_per_s_batch32": 50.78121745584556,
+  "image_a4_8_bands_s": 4.10689845799061,
+  "document_224_tokens_s": 0.16101541600073688,
+  "document_224_tokens_per_s": 1391.171141022763,
+  "document_1785_tokens_s": 1.1315796669950942,
+  "document_1785_tokens_per_s": 1577.4408572929392,
+  "document_7137_tokens_s": 4.469004083002801,
+  "document_7137_tokens_per_s": 1597.0001072821858,
+  "by_threads": {
+    "1": {
+      "query_ms": 72.14045849832473,
+      "queries_per_s_batch32": 43.46132807602293,
+      "image_a4_8_bands_s": 7.282377167008235,
+      "document_224_tokens_s": 0.16101541600073688,
+      "document_224_tokens_per_s": 1391.171141022763,
+      "document_1785_tokens_s": 1.1315796669950942,
+      "document_1785_tokens_per_s": 1577.4408572929392,
+      "document_7137_tokens_s": 7.058154208003543,
+      "document_7137_tokens_per_s": 1011.1708797616026
+    },
+    "2": {
+      "query_ms": 321.9164375041146,
+      "queries_per_s_batch32": 47.63006916133878,
+      "image_a4_8_bands_s": 5.061714249997749,
+      "document_224_tokens_s": 1.0075577499956125,
+      "document_224_tokens_per_s": 222.31976281357115,
+      "document_1785_tokens_s": 1.690571250001085,
+      "document_1785_tokens_per_s": 1055.8561196393553,
+      "document_7137_tokens_s": 5.373584165994544,
+      "document_7137_tokens_per_s": 1328.1638064152444
+    },
+    "4": {
+      "query_ms": 980.4185414977837,
+      "queries_per_s_batch32": 50.726143476271034,
+      "image_a4_8_bands_s": 4.1427060830028495,
+      "document_224_tokens_s": 1.189223708002828,
+      "document_224_tokens_per_s": 188.35816885637408,
+      "document_1785_tokens_s": 1.7647460830048658,
+      "document_1785_tokens_per_s": 1011.4769581812288,
+      "document_7137_tokens_s": 4.685182957997313,
+      "document_7137_tokens_per_s": 1523.3129770989176
+    },
+    "6": {
+      "query_ms": 936.5326250044745,
+      "queries_per_s_batch32": 50.78121745584556,
+      "image_a4_8_bands_s": 4.10689845799061,
+      "document_224_tokens_s": 1.4940945829876,
+      "document_224_tokens_per_s": 149.92357415023105,
+      "document_1785_tokens_s": 2.251674708997598,
+      "document_1785_tokens_per_s": 792.7432825297609,
+      "document_7137_tokens_s": 4.469004083002801,
+      "document_7137_tokens_per_s": 1597.0001072821858
+    }
+  },
+  "chip": "Apple M4 Pro",
+  "memory_gb": 64,
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "load_average_before": [
+    2.24462890625,
+    3.89501953125,
+    12.86181640625
+  ],
+  "load_average_after": [
+    3.853515625,
+    3.5732421875,
+    10.15869140625
+  ]
+}
