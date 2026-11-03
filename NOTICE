@@ -1,3 +1,6 @@
+pplx_context_mlx/images.py reproduces the arithmetic of PyTorch's CPU uint8 antialiased bicubic interpolation.
+PyTorch is distributed under a BSD-style license: https://github.com/pytorch/pytorch/blob/main/LICENSE
+
 pplx_context_mlx/gated_delta.py is vendored from mlx-lm 0.32.2 under the following license:
 
 MIT License

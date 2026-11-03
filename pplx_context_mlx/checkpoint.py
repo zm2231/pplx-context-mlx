@@ -14,7 +14,6 @@ REVISION_0_6B = "6d1fddab0a18478acc0a51edd1e81333fe441095"
 _FILES = ["config.json", "tokenizer.json", "model.safetensors.index.json", "*.safetensors"]
 _DTYPES = {"float32": mx.float32, "float16": mx.float16, "bfloat16": mx.bfloat16}
 _KEEP_FP32 = ("contextual_projection.",)
-_TEXT_PREFIXES = ("language_model.", "contextual_projection.")
 
 
 def resolve_checkpoint(path_or_repo: str, revision: str | None = None) -> Path:
@@ -34,11 +33,10 @@ def load_weights(path: Path, dtype: mx.Dtype) -> dict[str, mx.array]:
         if not isinstance(tensors, dict):
             raise TypeError(f"Expected named tensors in {filename}")
         for key, value in tensors.items():
-            if key.startswith(_TEXT_PREFIXES):
-                weights[key] = value if key.startswith(_KEEP_FP32) else value.astype(dtype)
-    expected = {key for key in weight_map if key.startswith(_TEXT_PREFIXES)}
-    if set(weights) != expected:
-        raise ValueError(f"Checkpoint is missing tensors: {sorted(expected - set(weights))[:5]}")
+            weights[key] = value if key.startswith(_KEEP_FP32) else value.astype(dtype)
+    missing = set(weight_map) - set(weights)
+    if missing:
+        raise ValueError(f"Checkpoint is missing tensors: {sorted(missing)[:5]}")
     return weights
 
 

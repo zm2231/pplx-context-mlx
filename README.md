@@ -13,4 +13,13 @@ query = engine.encode_queries([["What does the second chunk see?"]], normalize_e
 scores = chunks[0] @ query[0][0]
 ```
 
-Parity against the upstream PyTorch model is recorded in `reports/`; regenerate with `scripts/make_reference.py` and `scripts/parity_report.py`.
+Page images embed as horizontal bands, with one vector per band:
+
+```python
+from PIL import Image
+
+bands = engine.encode_images([Image.open("page.png")], chunks=8, normalize_embeddings=True)[0]
+page_score = (bands @ query[0][0]).max()
+```
+
+Parity against the upstream PyTorch model is recorded in `reports/`; regenerate with `scripts/make_reference.py` and `scripts/parity_report.py`. All reports compare against upstream at FP32, including the FP16 and BF16 runs.

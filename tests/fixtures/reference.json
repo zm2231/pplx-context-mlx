@@ -66,6 +66,38 @@
     {
       "id": "long_document",
       "tokens": 6049
+    },
+    {
+      "id": "image/page_a4_default",
+      "tokens": 1725
+    },
+    {
+      "id": "image/page_small_one_band",
+      "tokens": 478
+    },
+    {
+      "id": "image/page_small_many_bands",
+      "tokens": 493
+    },
+    {
+      "id": "image/mixed_rounding",
+      "tokens": 778
+    },
+    {
+      "id": "image/photo",
+      "tokens": 481
+    },
+    {
+      "id": "image/tiny_upscaled",
+      "tokens": 27
+    },
+    {
+      "id": "image/wide_bands_capped",
+      "tokens": 569
+    },
+    {
+      "id": "image/batch_unequal",
+      "tokens": 480
     }
   ]
 }

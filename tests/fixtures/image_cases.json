@@ -1,0 +1,57 @@
+[
+ {
+  "id": "page_a4_default",
+  "images": [
+   "page_a4.png"
+  ]
+ },
+ {
+  "id": "page_small_one_band",
+  "images": [
+   "page_small.png"
+  ],
+  "chunks": 1
+ },
+ {
+  "id": "page_small_many_bands",
+  "images": [
+   "page_small.png"
+  ],
+  "chunks": 16
+ },
+ {
+  "id": "mixed_rounding",
+  "images": [
+   "page_mixed_rounding.png"
+  ],
+  "max_pixels": 800000
+ },
+ {
+  "id": "photo",
+  "images": [
+   "photo.png"
+  ],
+  "chunks": 4
+ },
+ {
+  "id": "tiny_upscaled",
+  "images": [
+   "tiny.png"
+  ]
+ },
+ {
+  "id": "wide_bands_capped",
+  "images": [
+   "wide.png"
+  ],
+  "chunks": 64
+ },
+ {
+  "id": "batch_unequal",
+  "images": [
+   "page_small.png",
+   "tiny.png"
+  ],
+  "chunks": 3
+ }
+]

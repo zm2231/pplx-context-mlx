@@ -2,9 +2,11 @@ from __future__ import annotations
 
 import mlx.core as mx
 import numpy as np
+from PIL import Image
 
 from .checkpoint import CHECKPOINT_0_6B, load_checkpoint, resolve_checkpoint
 from .config import ModelConfig
+from .images import prepare_images
 from .model import PplxContextualModel, quantize_int8
 from .tokenizer import ContextualTokenizer
 
@@ -64,6 +66,39 @@ class ContextualEngine:
         self, queries: list[list[str]], batch_size: int = 32, normalize_embeddings: bool = False
     ) -> list[np.ndarray]:
         return self._encode(queries, self.project_queries, batch_size, normalize_embeddings)
+
+    def prepare_images(
+        self, images: list[Image.Image], *, chunks: int = 8, min_pixels: int = 16384, max_pixels: int = 1800000
+    ) -> dict[str, np.ndarray]:
+        return prepare_images(
+            images, self.tokenizer, self.config, chunks=chunks, min_pixels=min_pixels, max_pixels=max_pixels
+        )
+
+    def encode_images(
+        self,
+        images: list[Image.Image],
+        batch_size: int = 1,
+        normalize_embeddings: bool = False,
+        *,
+        chunks: int = 8,
+        min_pixels: int = 16384,
+        max_pixels: int = 1800000,
+    ) -> list[np.ndarray]:
+        """Return one (band_count, embedding_dim) array per image."""
+        if batch_size < 1:
+            raise ValueError("batch_size must be positive")
+        output: list[np.ndarray] = []
+        for start in range(0, len(images), batch_size):
+            features = self.prepare_images(
+                images[start : start + batch_size], chunks=chunks, min_pixels=min_pixels, max_pixels=max_pixels
+            )
+            vectors = quantize_int8(self.model.embed_images(features))
+            if normalize_embeddings:
+                vectors = _normalize(vectors)
+            mx.eval(vectors)
+            matrix = np.array(vectors, dtype=np.float32, copy=True)
+            output.extend(row[mask] for row, mask in zip(matrix, features["chunk_mask"], strict=True))
+        return output
 
 
 def load_model(

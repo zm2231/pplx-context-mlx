@@ -4,10 +4,12 @@ import argparse
 import json
 import platform
 import time
+from importlib.metadata import version
 from pathlib import Path
 
 import mlx.core as mx
 import numpy as np
+from PIL import Image
 
 from pplx_context_mlx import load_model
 
@@ -54,6 +56,37 @@ def _measure(engine, cases, reference) -> list[dict]:
     return results
 
 
+def _measure_images(engine, cases, reference) -> list[dict]:
+    results = []
+    for case in cases:
+        images = [Image.open(FIXTURES / "images" / name).convert("RGB") for name in case["images"]]
+        options = {key: case[key] for key in ("chunks", "min_pixels", "max_pixels") if key in case}
+        key = f"image/{case['id']}"
+        started = time.perf_counter()
+        projected = engine.model.embed_images(engine.prepare_images(images, **options))
+        mx.eval(projected)
+        seconds = time.perf_counter() - started
+        projected = np.array(projected)
+        expected = reference[f"{key}/projected"]
+        rows = engine.encode_images(images, batch_size=len(images), **options)
+        got = np.concatenate(rows)
+        want = np.concatenate([reference[f"{key}/encoded/{index}"].astype(np.float32) for index in range(len(rows))])
+        results.append(
+            {
+                "id": key,
+                "tokens": int(reference[f"{key}/input_ids"].shape[1]),
+                "vectors": int(got.shape[0]),
+                "projected_max_abs_error": float(np.abs(projected - expected).max()),
+                "projected_max_abs": float(np.abs(expected).max()),
+                "int8_max_abs_error": float(np.abs(got - want).max()),
+                "int8_exact_fraction": float((got == want).mean()),
+                "min_cosine": min(_cosine(a, b) for a, b in zip(got, want, strict=True)),
+                "seconds": seconds,
+            }
+        )
+    return results
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--dtype", default="float32")
@@ -62,10 +95,11 @@ def main() -> None:
     cases = json.loads((FIXTURES / "cases.json").read_text(encoding="utf-8"))
     reference = np.load(FIXTURES / "reference.npz")
     engine = load_model(dtype=args.dtype)
-    results = _measure(engine, cases, reference)
+    image_cases = json.loads((FIXTURES / "image_cases.json").read_text(encoding="utf-8"))
+    results = _measure(engine, cases, reference) + _measure_images(engine, image_cases, reference)
     report = {
         "dtype": args.dtype,
-        "mlx": mx.__version__,
+        "mlx": version("mlx"),
         "platform": platform.platform(),
         "reference": json.loads((FIXTURES / "reference.json").read_text(encoding="utf-8")),
         "worst_int8_max_abs_error": max(item["int8_max_abs_error"] for item in results),

@@ -25,8 +25,26 @@ class TextConfig:
 
 
 @dataclass(frozen=True)
+class VisionConfig:
+    depth: int
+    hidden_size: int
+    intermediate_size: int
+    in_channels: int
+    num_heads: int
+    num_position_embeddings: int
+    out_hidden_size: int
+    patch_size: int
+    spatial_merge_size: int
+    temporal_patch_size: int
+
+
+@dataclass(frozen=True)
 class ModelConfig:
     text: TextConfig
+    vision: VisionConfig
+    image_token_id: int
+    vision_start_token_id: int
+    vision_end_token_id: int
     embedding_dim: int
     query_prefix: str
     document_prefix: str
@@ -49,7 +67,25 @@ class ModelConfig:
         rope = text["rope_parameters"]
         if rope.get("rope_type") != "default" or not rope.get("mrope_interleaved"):
             raise ValueError(f"Unsupported rope parameters: {rope}")
+        vision = raw["vision_config"]
+        if vision.get("deepstack_visual_indexes"):
+            raise ValueError("Deepstack visual features are not supported")
         return cls(
+            vision=VisionConfig(
+                depth=vision["depth"],
+                hidden_size=vision["hidden_size"],
+                intermediate_size=vision["intermediate_size"],
+                in_channels=vision["in_channels"],
+                num_heads=vision["num_heads"],
+                num_position_embeddings=vision["num_position_embeddings"],
+                out_hidden_size=vision["out_hidden_size"],
+                patch_size=vision["patch_size"],
+                spatial_merge_size=vision["spatial_merge_size"],
+                temporal_patch_size=vision["temporal_patch_size"],
+            ),
+            image_token_id=raw["image_token_id"],
+            vision_start_token_id=raw["vision_start_token_id"],
+            vision_end_token_id=raw["vision_end_token_id"],
             text=TextConfig(
                 vocab_size=text["vocab_size"],
                 hidden_size=text["hidden_size"],

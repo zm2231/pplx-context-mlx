@@ -22,16 +22,16 @@ class ContextualTokenizer:
         self._tokenizer.no_padding()
         self._tokenizer.encode_special_tokens = True
         self.config = config
-        self.pad_id = self._required_id(pad_token)
-        self.query_prefix_id = self._required_id(config.query_prefix)
+        self.pad_id = self.reserved_id(pad_token)
+        self.query_prefix_id = self.reserved_id(config.query_prefix)
 
-    def _required_id(self, token: str) -> int:
+    def reserved_id(self, token: str) -> int:
         value = self._tokenizer.token_to_id(token)
         if value is None:
             raise ValueError(f"Tokenizer has no token {token!r}")
         return value
 
-    def _pad(self, rows: list[list[int]]) -> tuple[np.ndarray, np.ndarray]:
+    def pad(self, rows: list[list[int]]) -> tuple[np.ndarray, np.ndarray]:
         width = max(len(row) for row in rows)
         input_ids = np.full((len(rows), width), self.pad_id, dtype=np.int32)
         attention_mask = np.zeros((len(rows), width), dtype=np.bool_)
@@ -44,7 +44,7 @@ class ContextualTokenizer:
         if any(len(row) != 1 for row in queries):
             raise ValueError("Each query must contain exactly one string")
         encoded = self._tokenizer.encode_batch([row[0] for row in queries])
-        input_ids, attention_mask = self._pad([[self.query_prefix_id, *item.ids] for item in encoded])
+        input_ids, attention_mask = self.pad([[self.query_prefix_id, *item.ids] for item in encoded])
         if input_ids.shape[1] > self.config.query_length:
             raise ValueError(f"Input exceeds the {self.config.query_length}-token limit")
         return {"input_ids": input_ids, "attention_mask": attention_mask}
@@ -64,7 +64,7 @@ class ContextualTokenizer:
             texts.append("".join(parts))
             char_spans.append(spans)
         encoded = self._tokenizer.encode_batch(texts)
-        input_ids, attention_mask = self._pad([item.ids for item in encoded])
+        input_ids, attention_mask = self.pad([item.ids for item in encoded])
         if input_ids.shape[1] > self.config.document_length:
             raise ValueError(
                 f"Input exceeds the {self.config.document_length}-token limit; split the document into context windows"
