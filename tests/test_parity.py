@@ -7,7 +7,7 @@ import mlx.core as mx
 import numpy as np
 import pytest
 
-from pplx_context_mlx import load_model
+from pplx_context_mlx import load_model, text
 
 FIXTURES = Path(__file__).parent / "fixtures"
 CASES = json.loads((FIXTURES / "cases.json").read_text(encoding="utf-8"))
@@ -65,6 +65,17 @@ def test_layer_states_match_reference(engine, reference):
         expected = reference[f"trace/{index}"]
         error = np.abs(np.array(state) - expected).max() / np.abs(expected).max()
         assert error < 1e-3, f"layer {index} relative error {error}"
+
+
+def test_sliced_attention_matches_whole(monkeypatch):
+    query = mx.random.normal((2, 8, 40, 16))
+    key = mx.random.normal((2, 2, 40, 16))
+    value = mx.random.normal((2, 2, 40, 16))
+    mask = mx.array([[True] * 40, [True] * 25 + [False] * 15])[:, None, None, :]
+    whole = text._sliced_attention(query, key, value, 0.25, mask)
+    monkeypatch.setattr(text, "QUERY_SLICE_TOKENS", 7)
+    sliced = text._sliced_attention(query, key, value, 0.25, mask)
+    assert np.allclose(np.array(whole), np.array(sliced), atol=1e-6)
 
 
 def test_context_changes_the_vector_for_identical_chunk_text(engine):

@@ -65,6 +65,25 @@ def _rotate(x: mx.array, cos: mx.array, sin: mx.array) -> mx.array:
     return mx.concatenate([head * cos + turned * sin, x[..., dim:]], axis=-1)
 
 
+QUERY_SLICE_TOKENS = 2048
+
+
+def _sliced_attention(
+    query: mx.array, key: mx.array, value: mx.array, scale: float, mask: mx.array | None
+) -> mx.array:
+    length = query.shape[2]
+    if length <= QUERY_SLICE_TOKENS:
+        return mx.fast.scaled_dot_product_attention(query, key, value, scale=scale, mask=mask)
+    parts = []
+    for start in range(0, length, QUERY_SLICE_TOKENS):
+        part = mx.fast.scaled_dot_product_attention(
+            query[:, :, start : start + QUERY_SLICE_TOKENS], key, value, scale=scale, mask=mask
+        )
+        mx.eval(part)
+        parts.append(part)
+    return mx.concatenate(parts, axis=2)
+
+
 class Attention(nn.Module):
     def __init__(self, config: TextConfig):
         super().__init__()
@@ -86,12 +105,12 @@ class Attention(nn.Module):
         key = self.k_norm(self.k_proj(x).reshape(batch, length, self.num_kv_heads, self.head_dim)).transpose(0, 2, 1, 3)
         value = self.v_proj(x).reshape(batch, length, self.num_kv_heads, self.head_dim).transpose(0, 2, 1, 3)
         cos, sin = cos[:, None], sin[:, None]
-        out = mx.fast.scaled_dot_product_attention(
+        out = _sliced_attention(
             _rotate(query, cos, sin),
             _rotate(key, cos, sin),
             value,
-            scale=self.scale,
-            mask=None if mask is None else mask[:, None, None, :],
+            self.scale,
+            None if mask is None else mask[:, None, None, :],
         )
         out = out.transpose(0, 2, 1, 3).reshape(batch, length, -1)
         return self.o_proj(out * mx.sigmoid(gate.reshape(batch, length, -1)))
