@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pplx-context-mlx"
+version = "0.1.0"
+description = "Perplexity pplx-embed-v2-context contextual embeddings on Apple silicon with MLX"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE", "NOTICE"]
+requires-python = ">=3.11"
+authors = [{ name = "Merchantry LLC" }]
+keywords = ["mlx", "apple-silicon", "embeddings", "contextual-embeddings", "retrieval", "perplexity"]
+dependencies = [
+    "huggingface-hub>=0.27.0",
+    "mlx>=0.32",
+    "numpy>=1.26",
+    "tokenizers>=0.22",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8"]
+reference = ["torch>=2.8", "transformers==5.4.0", "torchvision", "pillow", "safetensors", "tqdm"]
+
+[project.scripts]
+pplx-context-mlx = "pplx_context_mlx.cli:main"
+
+[tool.setuptools]
+packages = ["pplx_context_mlx"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]

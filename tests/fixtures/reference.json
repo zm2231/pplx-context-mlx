@@ -1,0 +1,71 @@
+{
+  "repo": "perplexity-ai/pplx-embed-v2-context-0.6b",
+  "revision": "6d1fddab0a18478acc0a51edd1e81333fe441095",
+  "torch": "2.15.0",
+  "transformers": "5.4.0",
+  "device": "cpu",
+  "dtype": "float32",
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "cases": [
+    {
+      "id": "query_single",
+      "tokens": 7
+    },
+    {
+      "id": "query_batch_unequal",
+      "tokens": 15
+    },
+    {
+      "id": "query_empty",
+      "tokens": 1
+    },
+    {
+      "id": "contextual_three_chunks",
+      "tokens": 39
+    },
+    {
+      "id": "contextual_batch_unequal",
+      "tokens": 39
+    },
+    {
+      "id": "same_chunk_context_a",
+      "tokens": 20
+    },
+    {
+      "id": "same_chunk_context_b",
+      "tokens": 20
+    },
+    {
+      "id": "non_contextual",
+      "tokens": 8
+    },
+    {
+      "id": "multilingual_unicode",
+      "tokens": 53
+    },
+    {
+      "id": "control_tokens_in_text",
+      "tokens": 30
+    },
+    {
+      "id": "literal_separator_in_text",
+      "tokens": 9
+    },
+    {
+      "id": "empty_chunk",
+      "tokens": 6
+    },
+    {
+      "id": "whitespace_edges",
+      "tokens": 15
+    },
+    {
+      "id": "empty_document_in_batch",
+      "tokens": 4
+    },
+    {
+      "id": "long_document",
+      "tokens": 6049
+    }
+  ]
+}

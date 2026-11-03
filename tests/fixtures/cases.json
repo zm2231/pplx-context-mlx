@@ -1,0 +1,216 @@
+[
+ {
+  "id": "query_single",
+  "task": "query",
+  "documents": [
+   [
+    "What drives scientific breakthroughs?"
+   ]
+  ]
+ },
+ {
+  "id": "query_batch_unequal",
+  "task": "query",
+  "documents": [
+   [
+    "short"
+   ],
+   [
+    "How do plants turn sunlight into food over the course of a day?"
+   ],
+   [
+    "光合作用是如何进行的？"
+   ],
+   [
+    "¿Cuál es la capital de Perú?"
+   ]
+  ]
+ },
+ {
+  "id": "query_empty",
+  "task": "query",
+  "documents": [
+   [
+    ""
+   ]
+  ]
+ },
+ {
+  "id": "contextual_three_chunks",
+  "task": "document",
+  "documents": [
+   [
+    "Curiosity begins in childhood with endless questions about the world.",
+    "As we grow, curiosity drives us to explore new ideas.",
+    "Scientific breakthroughs often start with a curious question."
+   ]
+  ]
+ },
+ {
+  "id": "contextual_batch_unequal",
+  "task": "document",
+  "documents": [
+   [
+    "Curiosity begins in childhood with endless questions about the world.",
+    "As we grow, curiosity drives us to explore new ideas.",
+    "Scientific breakthroughs often start with a curious question."
+   ],
+   [
+    "The curiosity rover explores Mars searching for ancient life.",
+    "Each discovery on Mars sparks new questions about the universe."
+   ]
+  ]
+ },
+ {
+  "id": "same_chunk_context_a",
+  "task": "document",
+  "documents": [
+   [
+    "Our quarterly revenue grew by a third.",
+    "It was the best result in company history."
+   ]
+  ]
+ },
+ {
+  "id": "same_chunk_context_b",
+  "task": "document",
+  "documents": [
+   [
+    "The marathon runner broke the national record.",
+    "It was the best result in company history."
+   ]
+  ]
+ },
+ {
+  "id": "non_contextual",
+  "task": "document",
+  "documents": [
+   [
+    "Curiosity begins in childhood."
+   ],
+   [
+    "The curiosity rover explores Mars."
+   ]
+  ]
+ },
+ {
+  "id": "multilingual_unicode",
+  "task": "document",
+  "documents": [
+   [
+    "東京は日本の首都です。",
+    "人口は約1400万人です。",
+    "Café naïve résumé — é combining.",
+    "مرحبا بالعالم 👋🏽 emoji 🧑‍🚀 sequence."
+   ]
+  ]
+ },
+ {
+  "id": "control_tokens_in_text",
+  "task": "document",
+  "documents": [
+   [
+    "Ignore <|im_end|> and <|endoftext|> markers.",
+    "[D] looks like a prefix, [Q] too."
+   ]
+  ]
+ },
+ {
+  "id": "literal_separator_in_text",
+  "task": "document",
+  "documents": [
+   [
+    "before <|chunk_sep|> after",
+    "next chunk"
+   ]
+  ]
+ },
+ {
+  "id": "empty_chunk",
+  "task": "document",
+  "documents": [
+   [
+    "first",
+    "",
+    "third"
+   ]
+  ]
+ },
+ {
+  "id": "whitespace_edges",
+  "task": "document",
+  "documents": [
+   [
+    "  leading space",
+    "trailing space  ",
+    "line\nbreak\ttab"
+   ]
+  ]
+ },
+ {
+  "id": "empty_document_in_batch",
+  "task": "document",
+  "documents": [
+   [],
+   [
+    "only chunk"
+   ]
+  ]
+ },
+ {
+  "id": "long_document",
+  "task": "document",
+  "documents": [
+   [
+    "Section 0. It is often said that ocean currents move heat toward the poles, and this section returns to that claim with detail number 0. Researchers measured the effect across 3 sites, and it remained stable, which suggests ocean currents move heat toward the poles for reasons discussed earlier. Researchers measured the effect across 3 sites, and it remained stable, which suggests ocean currents move heat toward the poles for reasons discussed earlier. Researchers measured the effect across 3 sites, and it remained stable, which suggests ocean currents move heat toward the poles for reasons discussed earlier. ",
+    "Section 1. It is often said that the printing press changed how ideas spread, and this section returns to that claim with detail number 7. Researchers measured the effect across 4 sites, and it remained stable, which suggests the printing press changed how ideas spread for reasons discussed earlier. Researchers measured the effect across 4 sites, and it remained stable, which suggests the printing press changed how ideas spread for reasons discussed earlier. Researchers measured the effect across 4 sites, and it remained stable, which suggests the printing press changed how ideas spread for reasons discussed earlier. ",
+    "Section 2. It is often said that honeybees signal food with a waggle dance, and this section returns to that claim with detail number 14. Researchers measured the effect across 5 sites, and it remained stable, which suggests honeybees signal food with a waggle dance for reasons discussed earlier. Researchers measured the effect across 5 sites, and it remained stable, which suggests honeybees signal food with a waggle dance for reasons discussed earlier. Researchers measured the effect across 5 sites, and it remained stable, which suggests honeybees signal food with a waggle dance for reasons discussed earlier. ",
+    "Section 3. It is often said that steel bridges expand on hot afternoons, and this section returns to that claim with detail number 21. Researchers measured the effect across 6 sites, and it remained stable, which suggests steel bridges expand on hot afternoons for reasons discussed earlier. Researchers measured the effect across 6 sites, and it remained stable, which suggests steel bridges expand on hot afternoons for reasons discussed earlier. Researchers measured the effect across 6 sites, and it remained stable, which suggests steel bridges expand on hot afternoons for reasons discussed earlier. ",
+    "Section 4. It is often said that glaciers record ancient atmospheres in trapped bubbles, and this section returns to that claim with detail number 28. Researchers measured the effect across 7 sites, and it remained stable, which suggests glaciers record ancient atmospheres in trapped bubbles for reasons discussed earlier. Researchers measured the effect across 7 sites, and it remained stable, which suggests glaciers record ancient atmospheres in trapped bubbles for reasons discussed earlier. Researchers measured the effect across 7 sites, and it remained stable, which suggests glaciers record ancient atmospheres in trapped bubbles for reasons discussed earlier. ",
+    "Section 5. It is often said that a compiler turns source text into machine instructions, and this section returns to that claim with detail number 35. Researchers measured the effect across 8 sites, and it remained stable, which suggests a compiler turns source text into machine instructions for reasons discussed earlier. Researchers measured the effect across 8 sites, and it remained stable, which suggests a compiler turns source text into machine instructions for reasons discussed earlier. Researchers measured the effect across 8 sites, and it remained stable, which suggests a compiler turns source text into machine instructions for reasons discussed earlier. ",
+    "Section 6. It is often said that tea plantations terrace the misty hillsides, and this section returns to that claim with detail number 42. Researchers measured the effect across 9 sites, and it remained stable, which suggests tea plantations terrace the misty hillsides for reasons discussed earlier. Researchers measured the effect across 9 sites, and it remained stable, which suggests tea plantations terrace the misty hillsides for reasons discussed earlier. Researchers measured the effect across 9 sites, and it remained stable, which suggests tea plantations terrace the misty hillsides for reasons discussed earlier. ",
+    "Section 7. It is often said that lighthouses once relied on whale oil lamps, and this section returns to that claim with detail number 49. Researchers measured the effect across 10 sites, and it remained stable, which suggests lighthouses once relied on whale oil lamps for reasons discussed earlier. Researchers measured the effect across 10 sites, and it remained stable, which suggests lighthouses once relied on whale oil lamps for reasons discussed earlier. Researchers measured the effect across 10 sites, and it remained stable, which suggests lighthouses once relied on whale oil lamps for reasons discussed earlier. ",
+    "Section 8. It is often said that ocean currents move heat toward the poles, and this section returns to that claim with detail number 56. Researchers measured the effect across 11 sites, and it remained stable, which suggests ocean currents move heat toward the poles for reasons discussed earlier. Researchers measured the effect across 11 sites, and it remained stable, which suggests ocean currents move heat toward the poles for reasons discussed earlier. Researchers measured the effect across 11 sites, and it remained stable, which suggests ocean currents move heat toward the poles for reasons discussed earlier. ",
+    "Section 9. It is often said that the printing press changed how ideas spread, and this section returns to that claim with detail number 63. Researchers measured the effect across 12 sites, and it remained stable, which suggests the printing press changed how ideas spread for reasons discussed earlier. Researchers measured the effect across 12 sites, and it remained stable, which suggests the printing press changed how ideas spread for reasons discussed earlier. Researchers measured the effect across 12 sites, and it remained stable, which suggests the printing press changed how ideas spread for reasons discussed earlier. ",
+    "Section 10. It is often said that honeybees signal food with a waggle dance, and this section returns to that claim with detail number 70. Researchers measured the effect across 13 sites, and it remained stable, which suggests honeybees signal food with a waggle dance for reasons discussed earlier. Researchers measured the effect across 13 sites, and it remained stable, which suggests honeybees signal food with a waggle dance for reasons discussed earlier. Researchers measured the effect across 13 sites, and it remained stable, which suggests honeybees signal food with a waggle dance for reasons discussed earlier. ",
+    "Section 11. It is often said that steel bridges expand on hot afternoons, and this section returns to that claim with detail number 77. Researchers measured the effect across 14 sites, and it remained stable, which suggests steel bridges expand on hot afternoons for reasons discussed earlier. Researchers measured the effect across 14 sites, and it remained stable, which suggests steel bridges expand on hot afternoons for reasons discussed earlier. Researchers measured the effect across 14 sites, and it remained stable, which suggests steel bridges expand on hot afternoons for reasons discussed earlier. ",
+    "Section 12. It is often said that glaciers record ancient atmospheres in trapped bubbles, and this section returns to that claim with detail number 84. Researchers measured the effect across 15 sites, and it remained stable, which suggests glaciers record ancient atmospheres in trapped bubbles for reasons discussed earlier. Researchers measured the effect across 15 sites, and it remained stable, which suggests glaciers record ancient atmospheres in trapped bubbles for reasons discussed earlier. Researchers measured the effect across 15 sites, and it remained stable, which suggests glaciers record ancient atmospheres in trapped bubbles for reasons discussed earlier. ",
+    "Section 13. It is often said that a compiler turns source text into machine instructions, and this section returns to that claim with detail number 91. Researchers measured the effect across 16 sites, and it remained stable, which suggests a compiler turns source text into machine instructions for reasons discussed earlier. Researchers measured the effect across 16 sites, and it remained stable, which suggests a compiler turns source text into machine instructions for reasons discussed earlier. Researchers measured the effect across 16 sites, and it remained stable, which suggests a compiler turns source text into machine instructions for reasons discussed earlier. ",
+    "Section 14. It is often said that tea plantations terrace the misty hillsides, and this section returns to that claim with detail number 98. Researchers measured the effect across 17 sites, and it remained stable, which suggests tea plantations terrace the misty hillsides for reasons discussed earlier. Researchers measured the effect across 17 sites, and it remained stable, which suggests tea plantations terrace the misty hillsides for reasons discussed earlier. Researchers measured the effect across 17 sites, and it remained stable, which suggests tea plantations terrace the misty hillsides for reasons discussed earlier. ",
+    "Section 15. It is often said that lighthouses once relied on whale oil lamps, and this section returns to that claim with detail number 105. Researchers measured the effect across 18 sites, and it remained stable, which suggests lighthouses once relied on whale oil lamps for reasons discussed earlier. Researchers measured the effect across 18 sites, and it remained stable, which suggests lighthouses once relied on whale oil lamps for reasons discussed earlier. Researchers measured the effect across 18 sites, and it remained stable, which suggests lighthouses once relied on whale oil lamps for reasons discussed earlier. ",
+    "Section 16. It is often said that ocean currents move heat toward the poles, and this section returns to that claim with detail number 112. Researchers measured the effect across 19 sites, and it remained stable, which suggests ocean currents move heat toward the poles for reasons discussed earlier. Researchers measured the effect across 19 sites, and it remained stable, which suggests ocean currents move heat toward the poles for reasons discussed earlier. Researchers measured the effect across 19 sites, and it remained stable, which suggests ocean currents move heat toward the poles for reasons discussed earlier. ",
+    "Section 17. It is often said that the printing press changed how ideas spread, and this section returns to that claim with detail number 119. Researchers measured the effect across 20 sites, and it remained stable, which suggests the printing press changed how ideas spread for reasons discussed earlier. Researchers measured the effect across 20 sites, and it remained stable, which suggests the printing press changed how ideas spread for reasons discussed earlier. Researchers measured the effect across 20 sites, and it remained stable, which suggests the printing press changed how ideas spread for reasons discussed earlier. ",
+    "Section 18. It is often said that honeybees signal food with a waggle dance, and this section returns to that claim with detail number 126. Researchers measured the effect across 21 sites, and it remained stable, which suggests honeybees signal food with a waggle dance for reasons discussed earlier. Researchers measured the effect across 21 sites, and it remained stable, which suggests honeybees signal food with a waggle dance for reasons discussed earlier. Researchers measured the effect across 21 sites, and it remained stable, which suggests honeybees signal food with a waggle dance for reasons discussed earlier. ",
+    "Section 19. It is often said that steel bridges expand on hot afternoons, and this section returns to that claim with detail number 133. Researchers measured the effect across 22 sites, and it remained stable, which suggests steel bridges expand on hot afternoons for reasons discussed earlier. Researchers measured the effect across 22 sites, and it remained stable, which suggests steel bridges expand on hot afternoons for reasons discussed earlier. Researchers measured the effect across 22 sites, and it remained stable, which suggests steel bridges expand on hot afternoons for reasons discussed earlier. ",
+    "Section 20. It is often said that glaciers record ancient atmospheres in trapped bubbles, and this section returns to that claim with detail number 140. Researchers measured the effect across 23 sites, and it remained stable, which suggests glaciers record ancient atmospheres in trapped bubbles for reasons discussed earlier. Researchers measured the effect across 23 sites, and it remained stable, which suggests glaciers record ancient atmospheres in trapped bubbles for reasons discussed earlier. Researchers measured the effect across 23 sites, and it remained stable, which suggests glaciers record ancient atmospheres in trapped bubbles for reasons discussed earlier. ",
+    "Section 21. It is often said that a compiler turns source text into machine instructions, and this section returns to that claim with detail number 147. Researchers measured the effect across 24 sites, and it remained stable, which suggests a compiler turns source text into machine instructions for reasons discussed earlier. Researchers measured the effect across 24 sites, and it remained stable, which suggests a compiler turns source text into machine instructions for reasons discussed earlier. Researchers measured the effect across 24 sites, and it remained stable, which suggests a compiler turns source text into machine instructions for reasons discussed earlier. ",
+    "Section 22. It is often said that tea plantations terrace the misty hillsides, and this section returns to that claim with detail number 154. Researchers measured the effect across 25 sites, and it remained stable, which suggests tea plantations terrace the misty hillsides for reasons discussed earlier. Researchers measured the effect across 25 sites, and it remained stable, which suggests tea plantations terrace the misty hillsides for reasons discussed earlier. Researchers measured the effect across 25 sites, and it remained stable, which suggests tea plantations terrace the misty hillsides for reasons discussed earlier. ",
+    "Section 23. It is often said that lighthouses once relied on whale oil lamps, and this section returns to that claim with detail number 161. Researchers measured the effect across 26 sites, and it remained stable, which suggests lighthouses once relied on whale oil lamps for reasons discussed earlier. Researchers measured the effect across 26 sites, and it remained stable, which suggests lighthouses once relied on whale oil lamps for reasons discussed earlier. Researchers measured the effect across 26 sites, and it remained stable, which suggests lighthouses once relied on whale oil lamps for reasons discussed earlier. ",
+    "Section 24. It is often said that ocean currents move heat toward the poles, and this section returns to that claim with detail number 168. Researchers measured the effect across 27 sites, and it remained stable, which suggests ocean currents move heat toward the poles for reasons discussed earlier. Researchers measured the effect across 27 sites, and it remained stable, which suggests ocean currents move heat toward the poles for reasons discussed earlier. Researchers measured the effect across 27 sites, and it remained stable, which suggests ocean currents move heat toward the poles for reasons discussed earlier. ",
+    "Section 25. It is often said that the printing press changed how ideas spread, and this section returns to that claim with detail number 175. Researchers measured the effect across 28 sites, and it remained stable, which suggests the printing press changed how ideas spread for reasons discussed earlier. Researchers measured the effect across 28 sites, and it remained stable, which suggests the printing press changed how ideas spread for reasons discussed earlier. Researchers measured the effect across 28 sites, and it remained stable, which suggests the printing press changed how ideas spread for reasons discussed earlier. ",
+    "Section 26. It is often said that honeybees signal food with a waggle dance, and this section returns to that claim with detail number 182. Researchers measured the effect across 29 sites, and it remained stable, which suggests honeybees signal food with a waggle dance for reasons discussed earlier. Researchers measured the effect across 29 sites, and it remained stable, which suggests honeybees signal food with a waggle dance for reasons discussed earlier. Researchers measured the effect across 29 sites, and it remained stable, which suggests honeybees signal food with a waggle dance for reasons discussed earlier. ",
+    "Section 27. It is often said that steel bridges expand on hot afternoons, and this section returns to that claim with detail number 189. Researchers measured the effect across 30 sites, and it remained stable, which suggests steel bridges expand on hot afternoons for reasons discussed earlier. Researchers measured the effect across 30 sites, and it remained stable, which suggests steel bridges expand on hot afternoons for reasons discussed earlier. Researchers measured the effect across 30 sites, and it remained stable, which suggests steel bridges expand on hot afternoons for reasons discussed earlier. ",
+    "Section 28. It is often said that glaciers record ancient atmospheres in trapped bubbles, and this section returns to that claim with detail number 196. Researchers measured the effect across 31 sites, and it remained stable, which suggests glaciers record ancient atmospheres in trapped bubbles for reasons discussed earlier. Researchers measured the effect across 31 sites, and it remained stable, which suggests glaciers record ancient atmospheres in trapped bubbles for reasons discussed earlier. Researchers measured the effect across 31 sites, and it remained stable, which suggests glaciers record ancient atmospheres in trapped bubbles for reasons discussed earlier. ",
+    "Section 29. It is often said that a compiler turns source text into machine instructions, and this section returns to that claim with detail number 203. Researchers measured the effect across 32 sites, and it remained stable, which suggests a compiler turns source text into machine instructions for reasons discussed earlier. Researchers measured the effect across 32 sites, and it remained stable, which suggests a compiler turns source text into machine instructions for reasons discussed earlier. Researchers measured the effect across 32 sites, and it remained stable, which suggests a compiler turns source text into machine instructions for reasons discussed earlier. ",
+    "Section 30. It is often said that tea plantations terrace the misty hillsides, and this section returns to that claim with detail number 210. Researchers measured the effect across 33 sites, and it remained stable, which suggests tea plantations terrace the misty hillsides for reasons discussed earlier. Researchers measured the effect across 33 sites, and it remained stable, which suggests tea plantations terrace the misty hillsides for reasons discussed earlier. Researchers measured the effect across 33 sites, and it remained stable, which suggests tea plantations terrace the misty hillsides for reasons discussed earlier. ",
+    "Section 31. It is often said that lighthouses once relied on whale oil lamps, and this section returns to that claim with detail number 217. Researchers measured the effect across 34 sites, and it remained stable, which suggests lighthouses once relied on whale oil lamps for reasons discussed earlier. Researchers measured the effect across 34 sites, and it remained stable, which suggests lighthouses once relied on whale oil lamps for reasons discussed earlier. Researchers measured the effect across 34 sites, and it remained stable, which suggests lighthouses once relied on whale oil lamps for reasons discussed earlier. ",
+    "Section 32. It is often said that ocean currents move heat toward the poles, and this section returns to that claim with detail number 224. Researchers measured the effect across 35 sites, and it remained stable, which suggests ocean currents move heat toward the poles for reasons discussed earlier. Researchers measured the effect across 35 sites, and it remained stable, which suggests ocean currents move heat toward the poles for reasons discussed earlier. Researchers measured the effect across 35 sites, and it remained stable, which suggests ocean currents move heat toward the poles for reasons discussed earlier. ",
+    "Section 33. It is often said that the printing press changed how ideas spread, and this section returns to that claim with detail number 231. Researchers measured the effect across 36 sites, and it remained stable, which suggests the printing press changed how ideas spread for reasons discussed earlier. Researchers measured the effect across 36 sites, and it remained stable, which suggests the printing press changed how ideas spread for reasons discussed earlier. Researchers measured the effect across 36 sites, and it remained stable, which suggests the printing press changed how ideas spread for reasons discussed earlier. ",
+    "Section 34. It is often said that honeybees signal food with a waggle dance, and this section returns to that claim with detail number 238. Researchers measured the effect across 37 sites, and it remained stable, which suggests honeybees signal food with a waggle dance for reasons discussed earlier. Researchers measured the effect across 37 sites, and it remained stable, which suggests honeybees signal food with a waggle dance for reasons discussed earlier. Researchers measured the effect across 37 sites, and it remained stable, which suggests honeybees signal food with a waggle dance for reasons discussed earlier. ",
+    "Section 35. It is often said that steel bridges expand on hot afternoons, and this section returns to that claim with detail number 245. Researchers measured the effect across 38 sites, and it remained stable, which suggests steel bridges expand on hot afternoons for reasons discussed earlier. Researchers measured the effect across 38 sites, and it remained stable, which suggests steel bridges expand on hot afternoons for reasons discussed earlier. Researchers measured the effect across 38 sites, and it remained stable, which suggests steel bridges expand on hot afternoons for reasons discussed earlier. ",
+    "Section 36. It is often said that glaciers record ancient atmospheres in trapped bubbles, and this section returns to that claim with detail number 252. Researchers measured the effect across 39 sites, and it remained stable, which suggests glaciers record ancient atmospheres in trapped bubbles for reasons discussed earlier. Researchers measured the effect across 39 sites, and it remained stable, which suggests glaciers record ancient atmospheres in trapped bubbles for reasons discussed earlier. Researchers measured the effect across 39 sites, and it remained stable, which suggests glaciers record ancient atmospheres in trapped bubbles for reasons discussed earlier. ",
+    "Section 37. It is often said that a compiler turns source text into machine instructions, and this section returns to that claim with detail number 259. Researchers measured the effect across 40 sites, and it remained stable, which suggests a compiler turns source text into machine instructions for reasons discussed earlier. Researchers measured the effect across 40 sites, and it remained stable, which suggests a compiler turns source text into machine instructions for reasons discussed earlier. Researchers measured the effect across 40 sites, and it remained stable, which suggests a compiler turns source text into machine instructions for reasons discussed earlier. ",
+    "Section 38. It is often said that tea plantations terrace the misty hillsides, and this section returns to that claim with detail number 266. Researchers measured the effect across 41 sites, and it remained stable, which suggests tea plantations terrace the misty hillsides for reasons discussed earlier. Researchers measured the effect across 41 sites, and it remained stable, which suggests tea plantations terrace the misty hillsides for reasons discussed earlier. Researchers measured the effect across 41 sites, and it remained stable, which suggests tea plantations terrace the misty hillsides for reasons discussed earlier. ",
+    "Section 39. It is often said that lighthouses once relied on whale oil lamps, and this section returns to that claim with detail number 273. Researchers measured the effect across 42 sites, and it remained stable, which suggests lighthouses once relied on whale oil lamps for reasons discussed earlier. Researchers measured the effect across 42 sites, and it remained stable, which suggests lighthouses once relied on whale oil lamps for reasons discussed earlier. Researchers measured the effect across 42 sites, and it remained stable, which suggests lighthouses once relied on whale oil lamps for reasons discussed earlier. ",
+    "Section 40. It is often said that ocean currents move heat toward the poles, and this section returns to that claim with detail number 280. Researchers measured the effect across 43 sites, and it remained stable, which suggests ocean currents move heat toward the poles for reasons discussed earlier. Researchers measured the effect across 43 sites, and it remained stable, which suggests ocean currents move heat toward the poles for reasons discussed earlier. Researchers measured the effect across 43 sites, and it remained stable, which suggests ocean currents move heat toward the poles for reasons discussed earlier. ",
+    "Section 41. It is often said that the printing press changed how ideas spread, and this section returns to that claim with detail number 287. Researchers measured the effect across 44 sites, and it remained stable, which suggests the printing press changed how ideas spread for reasons discussed earlier. Researchers measured the effect across 44 sites, and it remained stable, which suggests the printing press changed how ideas spread for reasons discussed earlier. Researchers measured the effect across 44 sites, and it remained stable, which suggests the printing press changed how ideas spread for reasons discussed earlier. ",
+    "Section 42. It is often said that honeybees signal food with a waggle dance, and this section returns to that claim with detail number 294. Researchers measured the effect across 45 sites, and it remained stable, which suggests honeybees signal food with a waggle dance for reasons discussed earlier. Researchers measured the effect across 45 sites, and it remained stable, which suggests honeybees signal food with a waggle dance for reasons discussed earlier. Researchers measured the effect across 45 sites, and it remained stable, which suggests honeybees signal food with a waggle dance for reasons discussed earlier. ",
+    "Section 43. It is often said that steel bridges expand on hot afternoons, and this section returns to that claim with detail number 301. Researchers measured the effect across 46 sites, and it remained stable, which suggests steel bridges expand on hot afternoons for reasons discussed earlier. Researchers measured the effect across 46 sites, and it remained stable, which suggests steel bridges expand on hot afternoons for reasons discussed earlier. Researchers measured the effect across 46 sites, and it remained stable, which suggests steel bridges expand on hot afternoons for reasons discussed earlier. ",
+    "Section 44. It is often said that glaciers record ancient atmospheres in trapped bubbles, and this section returns to that claim with detail number 308. Researchers measured the effect across 47 sites, and it remained stable, which suggests glaciers record ancient atmospheres in trapped bubbles for reasons discussed earlier. Researchers measured the effect across 47 sites, and it remained stable, which suggests glaciers record ancient atmospheres in trapped bubbles for reasons discussed earlier. Researchers measured the effect across 47 sites, and it remained stable, which suggests glaciers record ancient atmospheres in trapped bubbles for reasons discussed earlier. ",
+    "Section 45. It is often said that a compiler turns source text into machine instructions, and this section returns to that claim with detail number 315. Researchers measured the effect across 48 sites, and it remained stable, which suggests a compiler turns source text into machine instructions for reasons discussed earlier. Researchers measured the effect across 48 sites, and it remained stable, which suggests a compiler turns source text into machine instructions for reasons discussed earlier. Researchers measured the effect across 48 sites, and it remained stable, which suggests a compiler turns source text into machine instructions for reasons discussed earlier. ",
+    "Section 46. It is often said that tea plantations terrace the misty hillsides, and this section returns to that claim with detail number 322. Researchers measured the effect across 49 sites, and it remained stable, which suggests tea plantations terrace the misty hillsides for reasons discussed earlier. Researchers measured the effect across 49 sites, and it remained stable, which suggests tea plantations terrace the misty hillsides for reasons discussed earlier. Researchers measured the effect across 49 sites, and it remained stable, which suggests tea plantations terrace the misty hillsides for reasons discussed earlier. ",
+    "Section 47. It is often said that lighthouses once relied on whale oil lamps, and this section returns to that claim with detail number 329. Researchers measured the effect across 50 sites, and it remained stable, which suggests lighthouses once relied on whale oil lamps for reasons discussed earlier. Researchers measured the effect across 50 sites, and it remained stable, which suggests lighthouses once relied on whale oil lamps for reasons discussed earlier. Researchers measured the effect across 50 sites, and it remained stable, which suggests lighthouses once relied on whale oil lamps for reasons discussed earlier. "
+   ]
+  ]
+ }
+]
