@@ -1,0 +1,22 @@
+docs 30 windows 38 max tok 32440 sum 740517 chunks 3702
+before 0 tok=8672 chunks=47 t=0
+after 0 1.8s metal_peak=4.29 metal_active=2.38 cache=3.42 maxrss=2.83
+before 1 tok=32289 chunks=165 t=2
+after 1 17.7s metal_peak=8.09 metal_active=2.38 cache=16.85 maxrss=2.84
+before 2 tok=5537 chunks=35 t=19
+after 2 1.1s metal_peak=3.70 metal_active=2.38 cache=19.14 maxrss=2.84
+before 3 tok=29919 chunks=145 t=21
+after 3 19.3s metal_peak=7.67 metal_active=2.38 cache=31.11 maxrss=2.84
+before 4 tok=17037 chunks=94 t=40
+after 4 8.8s metal_peak=5.54 metal_active=2.38 cache=37.67 maxrss=2.84
+before 5 tok=31185 chunks=153 t=49
+after 5 19.4s metal_peak=7.90 metal_active=2.38 cache=49.34 maxrss=2.84
+before 6 tok=20190 chunks=100 t=68
+after 6 10.5s metal_peak=6.12 metal_active=2.38 cache=50.42 maxrss=2.84
+before 7 tok=32287 chunks=152 t=78
+after 7 70.4s metal_peak=8.47 metal_active=2.38 cache=50.43 maxrss=2.84
+before 8 tok=6659 chunks=33 t=149
+after 8 1.6s metal_peak=3.97 metal_active=2.38 cache=48.71 maxrss=2.84
+before 9 tok=17501 chunks=88 t=151
+after 9 12.8s metal_peak=5.62 metal_active=2.38 cache=50.47 maxrss=2.84
+before 10 tok=16361 chunks=80 t=163

@@ -1,0 +1,17 @@
+{
+  "commit": "7b72533c1b8633664478823e617465c7f1ff28b5",
+  "mlx": "0.32.4",
+  "baseline_int8_error": 1.0,
+  "injected_int8_error": {
+    "reserved document prefix id": 147.0,
+    "no text rotary": 48.0,
+    "causal attention": 128.0,
+    "no padding mask": 57.0,
+    "no vision rotary": 79.0,
+    "no patch merge order": 65.0,
+    "no position embeddings": 43.0,
+    "misplaced separators": 4.0,
+    "mean instead of band pooling": 22.0
+  },
+  "missed": []
+}

@@ -1,0 +1,18 @@
+{
+  "insurance": {
+    "queries": 120,
+    "top1_agreement": 1.0,
+    "top10_overlap": 1.0,
+    "identical_top10_order": 0.9916666666666667,
+    "left_ndcg_at_10": 88.92790079116821,
+    "right_ndcg_at_10": 88.92790079116821
+  },
+  "esg": {
+    "queries": 36,
+    "top1_agreement": 1.0,
+    "top10_overlap": 0.9972222222222222,
+    "identical_top10_order": 0.9722222222222222,
+    "left_ndcg_at_10": 53.5388708114624,
+    "right_ndcg_at_10": 52.73591876029968
+  }
+}

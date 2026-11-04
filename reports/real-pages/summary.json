@@ -1,4 +1,7 @@
 {
+  "commit": "7b72533c1b8633664478823e617465c7f1ff28b5",
+  "reference": "upstream PyTorch on CPU, FP32",
+  "chunks_per_page": 8,
   "pages": 48,
   "vectors": 384,
   "max_int8_error": 1.0,

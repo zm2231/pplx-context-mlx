@@ -1,9 +1,9 @@
 {
   "dtype": "float32",
   "chunk_tokens": null,
-  "commit": "3488fe5",
+  "commit": "7b72533c1b8633664478823e617465c7f1ff28b5",
   "platform": "macOS-27.0.1-arm64-arm-64bit",
-  "average_ndcg_at_10": 55.81492237304505,
+  "average_ndcg_at_10": 55.817142275584864,
   "paper_average_ndcg_at_10": 55.81125,
   "tasks": {
     "finance_en": {
@@ -20,7 +20,7 @@
         "portuguese": 58.81826509140547,
         "spanish": 58.70850973454965
       },
-      "document_seconds": 402.0488833749987
+      "document_seconds": 458.12337225000374
     },
     "finance_fr": {
       "paper_ndcg_at_10": 43.51,
@@ -36,7 +36,7 @@
         "portuguese": 43.59145063658795,
         "spanish": 44.071289412062185
       },
-      "document_seconds": 467.70521258299414
+      "document_seconds": 470.33296391699696
     },
     "industrial": {
       "paper_ndcg_at_10": 43.47,
@@ -52,23 +52,23 @@
         "portuguese": 42.437622012950385,
         "spanish": 44.044870988597644
       },
-      "document_seconds": 500.0040741249977
+      "document_seconds": 484.2669673749915
     },
     "pharmaceuticals": {
       "paper_ndcg_at_10": 63.37,
       "pages": 2313,
       "chunks": 2313,
       "queries": 2184,
-      "ndcg_at_10": 63.43892257736213,
+      "ndcg_at_10": 63.458462127815544,
       "languages": {
-        "english": 64.7419850754409,
-        "french": 63.39117921991231,
-        "german": 62.730335554402394,
-        "italian": 62.817074923824634,
-        "portuguese": 63.881620201347786,
-        "spanish": 63.0713404892448
+        "english": 64.77197859553657,
+        "french": 63.41680445270185,
+        "german": 62.731891850557396,
+        "italian": 62.878733450509785,
+        "portuguese": 63.88089673012378,
+        "spanish": 63.07046768746392
       },
-      "document_seconds": 126.72552179099876
+      "document_seconds": 125.70258858401212
     },
     "computer_science": {
       "paper_ndcg_at_10": 70.69,
@@ -84,7 +84,7 @@
         "portuguese": 69.92436486072799,
         "spanish": 69.97659771069542
       },
-      "document_seconds": 105.82953429200279
+      "document_seconds": 104.60966858299798
     },
     "hr": {
       "paper_ndcg_at_10": 56.22,
@@ -100,7 +100,7 @@
         "portuguese": 55.61282104781261,
         "spanish": 55.377952822435695
       },
-      "document_seconds": 151.0312215830054
+      "document_seconds": 149.38301183399744
     },
     "energy": {
       "paper_ndcg_at_10": 63.62,
@@ -116,23 +116,23 @@
         "portuguese": 62.96248124219065,
         "spanish": 64.29915342467064
       },
-      "document_seconds": 241.48265820801316
+      "document_seconds": 269.4019412500056
     },
     "physics": {
       "paper_ndcg_at_10": 46.47,
       "pages": 1674,
       "chunks": 1674,
       "queries": 1812,
-      "ndcg_at_10": 46.35213195866635,
+      "ndcg_at_10": 46.35035162853148,
       "languages": {
-        "english": 45.980220026255,
-        "french": 47.16073100598548,
+        "english": 45.97471754351383,
+        "french": 47.1594287873886,
         "german": 45.93738522932598,
         "italian": 45.74246721775271,
-        "portuguese": 46.565569793586214,
-        "spanish": 46.72641847909272
+        "portuguese": 46.563902791308294,
+        "spanish": 46.72420820189942
       },
-      "document_seconds": 56.144635332995676
+      "document_seconds": 62.38832029199693
     }
   }
 }

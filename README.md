@@ -31,9 +31,9 @@ Measured against the upstream PyTorch model at revision `6d1fddab`, FP32 on CPU,
 | `float32` (default) | 1 step | 0.999998 | 2.38 GB |
 | `float16` | 1 step | 0.99978 | 1.19 GB |
 
-Both rows compare against upstream at FP32. Image pixels match upstream byte for byte on every fixture. On 48 real ViDoRe-V3 page images (384 band vectors), MLX `float32` stays within one int8 step with a lowest cosine of 0.9999986. Upstream on transformers 5.22.1 stays within one int8 step of the recorded 5.4.0 fixtures, once its missing `config._commit_hash` is set. The reference ran on CPU, with upstream's PyTorch fallback rather than its CUDA fast path.
+Both rows compare against upstream at FP32. Image pixels match upstream byte for byte on every fixture. On 48 real ViDoRe-V3 page images (384 band vectors), MLX `float32` stays within one int8 step with a lowest cosine of 0.9999986 (`reports/real-pages/summary.json`). Upstream on transformers 5.22.1 stays within one int8 step of the recorded 5.4.0 fixtures, once its missing `config._commit_hash` is set by hand; without that, its code raises `AttributeError` on that version (`reports/compat/transformers-5.22.1-drift.json`). The reference ran on CPU, with upstream's PyTorch fallback rather than its CUDA fast path.
 
-`scripts/fault_injection.py` breaks nine parts of the model on purpose and confirms the vectors catch each one. Details are in `reports/parity-*.json`; regenerate with `scripts/make_reference.py` and `scripts/parity_report.py`.
+`scripts/fault_injection.py` breaks nine parts of the model on purpose and confirms the vectors catch each one (`reports/fault-injection.json`). Details are in `reports/parity-*.json`; regenerate with `scripts/make_reference.py` and `scripts/parity_report.py`.
 
 ## Retrieval
 
@@ -48,12 +48,12 @@ Whole pages, one chunk per page, nDCG@10 averaged over six languages, 18,252 pag
 | Finance (EN) | 59.14 | 59.19 |
 | Finance (FR) | 43.51 | 43.54 |
 | Industrial | 43.47 | 43.45 |
-| Pharmaceuticals | 63.37 | 63.44 |
+| Pharmaceuticals | 63.37 | 63.46 |
 | Computer science | 70.69 | 70.66 |
 | HR | 56.22 | 56.25 |
 | Energy | 63.62 | 63.64 |
 | Physics | 46.47 | 46.35 |
-| Average | 55.81 | 55.81 |
+| Average | 55.81 | 55.82 |
 
 With 128-token chunks (paper Table 13) the average is 58.33 against 58.51. The paper's chunker is not public, so this run uses fixed token slices.
 
@@ -73,7 +73,7 @@ nDCG@10 on the official task splits (paper Table 5).
 | ESG | 67.3 | 53.54 | 52.74 |
 | Average | 80.7 | 79.05 | 78.94 |
 
-ESG is the one large gap, and it is not specific to this port: upstream's PyTorch model scored 52.74 under the same harness. Insurance also matches upstream exactly at 88.93. ESG has 36 queries and documents of up to 60,217 tokens, which were embedded whole here. Its score changes with how much context each chunk sees:
+ESG is the one large gap, and it is not specific to this port: upstream's PyTorch model scored 52.74 under the same harness, and 88.93 on Insurance, the same as MLX. On those two tasks every query has the same top result in both runtimes, with 99.7% to 100% top-10 overlap (`reports/conteb/upstream-insurance-esg.json`, `reports/conteb/mlx-vs-upstream-rankings.json`). ESG has 36 queries and documents of up to 60,217 tokens, which were embedded whole here. Its score changes with how much context each chunk sees:
 
 | Context per pass | ESG nDCG@10 |
 |---:|---:|
@@ -89,22 +89,26 @@ So more context is not automatically better on this task. Which setting the pape
 
 ## Speed
 
-On an M4 Pro with 64 GB, with the machine otherwise idle. MLX values are medians of three runs. Upstream ran on CPU at its best thread count for each workload, because 1 thread was fastest for short inputs and 4 to 6 for long ones. No CUDA comparison was run.
+On an M4 Pro with 64 GB. Each run started with no CI virtual machines or inference jobs active and with 1-minute and 5-minute load averages under 2.7; other background services were running, and each report records its load. MLX values are medians of three runs. Upstream ran on CPU at its best thread count for each workload, chosen from 1, 2, 4 and 6, because 1 thread was fastest for short inputs and 4 to 6 for long ones. No CUDA comparison was run.
 
 | Workload | MLX `float16` | MLX `float32` | Upstream CPU |
 |---|---:|---:|---:|
-| One query | 7.6 ms | 11.6 ms | 75.5 ms |
-| Queries per second, batches of 32 | 597 | 515 | 50 |
-| 224-token document | 0.031 s | 0.033 s | 0.165 s |
-| 1,785-token document | 0.21 s | 0.24 s | 1.21 s |
-| 7,137-token document | 1.19 s | 1.45 s | 4.62 s |
-| A4 page, 8 bands | 0.90 s | 1.05 s | 4.11 s |
+| One query | 7.4 ms | 11.4 ms | 71.9 ms |
+| Queries per second, batches of 32 | 600 | 522 | 50 |
+| 224-token document | 0.029 s | 0.032 s | 0.160 s |
+| 1,785-token document | 0.20 s | 0.24 s | 1.13 s |
+| 7,137-token document | 1.16 s | 1.43 s | 4.55 s |
+| A4 page, 8 bands | 0.87 s | 1.03 s | 4.11 s |
 
 Results are in `reports/benchmark/`. Reproduce with `scripts/benchmark.py`.
 
 ## Memory
 
-MLX's buffer cache is process-wide and otherwise grows far past the model's needs, reaching about 50 GB on a 64 GB Mac in a run that was then killed with SIGKILL; with the cap, the same workload completes. `load_model` caps it at 1 GB by default; set `cache_limit_mb` to change it. Peak footprints below are measured from the OS and include that cache.
+`load_model` caps MLX's buffer cache at 1 GB by default; set `cache_limit_mb` to change it. The cap applies to the whole process, because MLX's cache is process-wide, and a later `load_model` call replaces it.
+
+Without the cap, a traced run over ESG documents in 32,768-token windows reached 50.47 GB of cache with 2.38 GB of active memory, then ended at window 10 of 38 without a traceback (`reports/memory/uncapped-esg-trace.log`). An earlier run of that task exited with code 137. What killed them was not identified. The same traced workload with the cap holds the cache near 1 GB and completes all 38 windows (`reports/memory/capped-esg-trace.log`).
+
+Peak footprints below are measured from the OS and include the cache. Times are indicative: the document-length runs were not held to the load limits above.
 
 | Tokens | `float16` time | `float16` peak | `float32` time | `float32` peak |
 |---:|---:|---:|---:|---:|
@@ -113,7 +117,7 @@ MLX's buffer cache is process-wide and otherwise grows far past the model's need
 | 59,041 | 42.0 s | 8.0 GB | | |
 | 119,041 | 171 s | 13.2 GB | | |
 
-Upstream on CPU measured a lower footprint on the speed workloads, 2.5 GB against 5.5 GB for MLX `float32`. No memory advantage over upstream is claimed.
+Upstream on CPU measured a lower footprint on the speed workloads, 2.6 GB against 5.5 GB for MLX `float32`. No memory advantage over upstream is claimed.
 
 Attention scores queries in slices, so memory stays far below the square of the document length. Vector accuracy against upstream is verified up to 13,871 tokens. Very long inputs are possible, but they are not automatically better; see ESG above. Results are in `reports/`.
 
