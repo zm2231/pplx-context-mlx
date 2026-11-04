@@ -1,6 +1,6 @@
 {
   "dtype": "float16",
-  "commit": "48c2118a348ffe252bf480e4c74a9d8c6a803fc9",
+  "commit": "fd5617b24bec115186de6bf91c3b71abb482443e",
   "mlx": "0.32.4",
   "platform": "macOS-27.0.1-arm64-arm-64bit",
   "reference": {
@@ -123,7 +123,7 @@
       "int8_max_abs_error": 1.0,
       "int8_exact_fraction": 0.955078125,
       "min_cosine": 0.9999908804893494,
-      "seconds": 0.014969250012654811
+      "seconds": 0.01523920800536871
     },
     {
       "id": "query_batch_unequal",
@@ -134,7 +134,7 @@
       "int8_max_abs_error": 1.0,
       "int8_exact_fraction": 0.9501953125,
       "min_cosine": 0.9999892115592957,
-      "seconds": 0.014159417012706399
+      "seconds": 0.014959666994400322
     },
     {
       "id": "query_empty",
@@ -145,7 +145,7 @@
       "int8_max_abs_error": 1.0,
       "int8_exact_fraction": 0.861328125,
       "min_cosine": 0.9999918341636658,
-      "seconds": 0.0069662499881815165
+      "seconds": 0.006984292005654424
     },
     {
       "id": "contextual_three_chunks",
@@ -156,7 +156,7 @@
       "int8_max_abs_error": 1.0,
       "int8_exact_fraction": 0.951171875,
       "min_cosine": 0.99997478723526,
-      "seconds": 0.012695291981799528
+      "seconds": 0.012427792011294514
     },
     {
       "id": "contextual_batch_unequal",
@@ -167,7 +167,7 @@
       "int8_max_abs_error": 1.0,
       "int8_exact_fraction": 0.94375,
       "min_cosine": 0.999971866607666,
-      "seconds": 0.017445707984734327
+      "seconds": 0.017442500015022233
     },
     {
       "id": "same_chunk_context_a",
@@ -178,7 +178,7 @@
       "int8_max_abs_error": 1.0,
       "int8_exact_fraction": 0.96923828125,
       "min_cosine": 0.9999847412109375,
-      "seconds": 0.010918457992374897
+      "seconds": 0.010888999997405335
     },
     {
       "id": "same_chunk_context_b",
@@ -189,7 +189,7 @@
       "int8_max_abs_error": 1.0,
       "int8_exact_fraction": 0.9501953125,
       "min_cosine": 0.9999793171882629,
-      "seconds": 0.010630625009071082
+      "seconds": 0.010799415991641581
     },
     {
       "id": "non_contextual",
@@ -200,7 +200,7 @@
       "int8_max_abs_error": 1.0,
       "int8_exact_fraction": 0.97314453125,
       "min_cosine": 0.9999901652336121,
-      "seconds": 0.010429457994177938
+      "seconds": 0.010295459011103958
     },
     {
       "id": "multilingual_unicode",
@@ -211,7 +211,7 @@
       "int8_max_abs_error": 1.0,
       "int8_exact_fraction": 0.946533203125,
       "min_cosine": 0.9999697804450989,
-      "seconds": 0.01260829099919647
+      "seconds": 0.012582374998601153
     },
     {
       "id": "control_tokens_in_text",
@@ -222,7 +222,7 @@
       "int8_max_abs_error": 1.0,
       "int8_exact_fraction": 0.96240234375,
       "min_cosine": 0.9999781847000122,
-      "seconds": 0.010898957989411429
+      "seconds": 0.011354332993505523
     },
     {
       "id": "literal_separator_in_text",
@@ -233,7 +233,7 @@
       "int8_max_abs_error": 1.0,
       "int8_exact_fraction": 0.89013671875,
       "min_cosine": 0.9997842907905579,
-      "seconds": 0.007757957995636389
+      "seconds": 0.007893959002103657
     },
     {
       "id": "empty_chunk",
@@ -244,7 +244,7 @@
       "int8_max_abs_error": 1.0,
       "int8_exact_fraction": 0.9840494791666666,
       "min_cosine": 0.9999918937683105,
-      "seconds": 0.007134249986847863
+      "seconds": 0.007046042010188103
     },
     {
       "id": "whitespace_edges",
@@ -255,7 +255,7 @@
       "int8_max_abs_error": 1.0,
       "int8_exact_fraction": 0.9733072916666666,
       "min_cosine": 0.9999400973320007,
-      "seconds": 0.008020208013476804
+      "seconds": 0.008277040993561968
     },
     {
       "id": "empty_document_in_batch",
@@ -266,7 +266,7 @@
       "int8_max_abs_error": 1.0,
       "int8_exact_fraction": 0.9736328125,
       "min_cosine": 0.9999915361404419,
-      "seconds": 0.007670749997487292
+      "seconds": 0.007571291993372142
     },
     {
       "id": "long_document",
@@ -277,7 +277,7 @@
       "int8_max_abs_error": 1.0,
       "int8_exact_fraction": 0.9619344075520834,
       "min_cosine": 0.9999555945396423,
-      "seconds": 0.9939424999756739
+      "seconds": 0.9717152919911314
     },
     {
       "id": "very_long_document",
@@ -288,7 +288,7 @@
       "int8_max_abs_error": 1.0,
       "int8_exact_fraction": 0.95725,
       "min_cosine": 0.9999600052833557,
-      "seconds": 3.1789107079966925
+      "seconds": 3.141720957995858
     },
     {
       "id": "image/page_a4_default",
@@ -299,7 +299,7 @@
       "int8_max_abs_error": 1.0,
       "int8_exact_fraction": 0.9376220703125,
       "min_cosine": 0.9999465942382812,
-      "seconds": 0.9582083749992307
+      "seconds": 0.9181147079798393
     },
     {
       "id": "image/page_small_one_band",
@@ -310,7 +310,7 @@
       "int8_max_abs_error": 1.0,
       "int8_exact_fraction": 0.9677734375,
       "min_cosine": 0.9999797344207764,
-      "seconds": 0.21317654199083336
+      "seconds": 0.2093509160040412
     },
     {
       "id": "image/page_small_many_bands",
@@ -321,7 +321,7 @@
       "int8_max_abs_error": 1.0,
       "int8_exact_fraction": 0.93597412109375,
       "min_cosine": 0.9999355673789978,
-      "seconds": 0.1994543749897275
+      "seconds": 0.19954866598709486
     },
     {
       "id": "image/mixed_rounding",
@@ -332,7 +332,7 @@
       "int8_max_abs_error": 1.0,
       "int8_exact_fraction": 0.9278564453125,
       "min_cosine": 0.9999350309371948,
-      "seconds": 0.35724537502392195
+      "seconds": 0.3525304160139058
     },
     {
       "id": "image/photo",
@@ -343,7 +343,7 @@
       "int8_max_abs_error": 1.0,
       "int8_exact_fraction": 0.920166015625,
       "min_cosine": 0.9999260902404785,
-      "seconds": 0.17610116599826142
+      "seconds": 0.15897333298926242
     },
     {
       "id": "image/tiny_upscaled",
@@ -354,7 +354,7 @@
       "int8_max_abs_error": 1.0,
       "int8_exact_fraction": 0.86015625,
       "min_cosine": 0.9998911619186401,
-      "seconds": 0.025419791985768825
+      "seconds": 0.025138665980193764
     },
     {
       "id": "image/wide_bands_capped",
@@ -365,7 +365,7 @@
       "int8_max_abs_error": 1.0,
       "int8_exact_fraction": 0.9080946180555556,
       "min_cosine": 0.9998583793640137,
-      "seconds": 0.2649587909982074
+      "seconds": 0.26569041699985974
     },
     {
       "id": "image/batch_unequal",
@@ -376,7 +376,7 @@
       "int8_max_abs_error": 1.0,
       "int8_exact_fraction": 0.9208984375,
       "min_cosine": 0.9999150633811951,
-      "seconds": 0.27251708300900646
+      "seconds": 0.26212395797483623
     }
   ]
 }
