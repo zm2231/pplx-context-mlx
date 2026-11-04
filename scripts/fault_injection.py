@@ -1,7 +1,10 @@
 from __future__ import annotations
 
+import argparse
 import json
+import subprocess
 from collections.abc import Callable
+from importlib.metadata import version
 from pathlib import Path
 from typing import Any
 
@@ -61,6 +64,9 @@ def _misplaced_separators(original):
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description="Break parts of the model on purpose and confirm the vectors catch it.")
+    parser.add_argument("--output", type=Path)
+    args = parser.parse_args()
     engine = load_model()
     document = "contextual_three_chunks"
     batch = "contextual_batch_unequal"
@@ -96,7 +102,11 @@ def main() -> None:
     )
     baseline = max(_text_error(engine, document), _image_error(engine, page))
     missed = [name for name, error in results.items() if error <= 1]
-    print(json.dumps({"baseline_int8_error": baseline, "injected_int8_error": results, "missed": missed}, indent=2))
+    commit = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True, check=False).stdout.strip()
+    report = {"commit": commit, "mlx": version("mlx"), "baseline_int8_error": baseline, "injected_int8_error": results, "missed": missed}
+    print(json.dumps(report, indent=2))
+    if args.output:
+        args.output.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     if missed:
         raise SystemExit(f"Faults not caught: {missed}")
 

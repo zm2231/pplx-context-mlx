@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import subprocess
 from pathlib import Path
 from typing import Any
 
@@ -65,7 +66,11 @@ def main() -> None:
         cosines.append(float(((a * b).sum(-1) / (np.linalg.norm(a, axis=-1) * np.linalg.norm(b, axis=-1))).min()))
         exact.append(float((a == b).mean()))
         sizes.append(a.shape[0])
+    commit = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True, check=False).stdout.strip()
     report = {
+        "commit": commit,
+        "reference": "upstream PyTorch on CPU, FP32",
+        "chunks_per_page": args.chunks,
         "pages": len(errors),
         "vectors": sum(sizes),
         "max_int8_error": max(errors),

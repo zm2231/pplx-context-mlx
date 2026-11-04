@@ -70,7 +70,7 @@ def run_task(engine, task: str, chunk_tokens: int | None) -> dict:
         for row, vector in zip(rows, encoded, strict=True):
             scores = matrix @ vector[0]
             best: dict[int, float] = {}
-            for index in np.argsort(-scores)[: TOP_K * 200]:
+            for index in np.argsort(-scores, kind="stable"):
                 best.setdefault(int(owner[index]), float(scores[index]))
                 if len(best) >= TOP_K:
                     break
