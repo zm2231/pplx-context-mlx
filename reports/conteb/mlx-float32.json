@@ -1,7 +1,7 @@
 {
   "runtime": "mlx-float32",
   "window_tokens": null,
-  "commit": "3488fe5",
+  "commit": "bc3e23a5e0f3018540a6303b8591dc9c08ce7c87",
   "platform": "macOS-27.0.1-arm64-arm-64bit",
   "average_ndcg_at_10": 79.04502674937248,
   "paper_average_ndcg_at_10": 80.7,
@@ -12,8 +12,8 @@
       "chunks": 2291,
       "queries": 5283,
       "ndcg_at_10": 94.09831166267395,
-      "document_seconds": 36.40776879199257,
-      "query_seconds": 15.670364500008873
+      "document_seconds": 44.657384041987825,
+      "query_seconds": 14.996872832998633
     },
     "esg": {
       "paper_ndcg_at_10": 67.3,
@@ -21,8 +21,8 @@
       "chunks": 3702,
       "queries": 36,
       "ndcg_at_10": 53.5388708114624,
-      "document_seconds": 481.08343991699803,
-      "query_seconds": 0.1168068750121165
+      "document_seconds": 602.3347292910039,
+      "query_seconds": 0.15743999999540392
     },
     "insurance": {
       "paper_ndcg_at_10": 88.0,
@@ -30,8 +30,8 @@
       "chunks": 60,
       "queries": 120,
       "ndcg_at_10": 88.92790079116821,
-      "document_seconds": 1.010539416995016,
-      "query_seconds": 0.2903783329966245
+      "document_seconds": 1.116124584004865,
+      "query_seconds": 0.3213919999980135
     },
     "football": {
       "paper_ndcg_at_10": 79.2,
@@ -39,8 +39,8 @@
       "chunks": 6259,
       "queries": 2682,
       "ndcg_at_10": 79.16836142539978,
-      "document_seconds": 77.25244308399851,
-      "query_seconds": 8.43359841700294
+      "document_seconds": 94.27543808300106,
+      "query_seconds": 9.716631332994439
     },
     "squad": {
       "paper_ndcg_at_10": 87.3,
@@ -48,8 +48,8 @@
       "chunks": 17562,
       "queries": 2067,
       "ndcg_at_10": 87.27057576179504,
-      "document_seconds": 59.7813020409958,
-      "query_seconds": 4.988673415995436
+      "document_seconds": 68.73253158399893,
+      "query_seconds": 5.888431250001304
     },
     "narrativeqa": {
       "paper_ndcg_at_10": 83.4,
@@ -57,8 +57,8 @@
       "chunks": 1750,
       "queries": 8575,
       "ndcg_at_10": 83.38650465011597,
-      "document_seconds": 36.90697129200271,
-      "query_seconds": 28.403660500000115
+      "document_seconds": 42.33015824999893,
+      "query_seconds": 34.377874124998925
     },
     "mldr": {
       "paper_ndcg_at_10": 89.8,
@@ -66,8 +66,8 @@
       "chunks": 1536,
       "queries": 100,
       "ndcg_at_10": 89.64796662330627,
-      "document_seconds": 41.332008625002345,
-      "query_seconds": 0.30043604200182017
+      "document_seconds": 46.59176083300554,
+      "query_seconds": 0.3401207080023596
     },
     "covid": {
       "paper_ndcg_at_10": 56.1,
@@ -75,8 +75,8 @@
       "chunks": 3351,
       "queries": 1111,
       "ndcg_at_10": 56.32172226905823,
-      "document_seconds": 104.97520933298802,
-      "query_seconds": 2.8790791249921313
+      "document_seconds": 129.9145184999943,
+      "query_seconds": 3.931873084002291
     }
   }
 }

@@ -1,6 +1,7 @@
 {
   "runtime": "torch",
-  "commit": "",
+  "window_tokens": null,
+  "commit": "bc3e23a5e0f3018540a6303b8591dc9c08ce7c87",
   "platform": "macOS-27.0.1-arm64-arm-64bit",
   "average_ndcg_at_10": 70.83190977573395,
   "paper_average_ndcg_at_10": 80.7,
@@ -11,8 +12,8 @@
       "chunks": 60,
       "queries": 120,
       "ndcg_at_10": 88.92790079116821,
-      "document_seconds": 5.182001084001968,
-      "query_seconds": 20.914318958006334
+      "document_seconds": 6.946465208995505,
+      "query_seconds": 26.563186583996867
     },
     "esg": {
       "paper_ndcg_at_10": 67.3,
@@ -20,9 +21,8 @@
       "chunks": 3702,
       "queries": 36,
       "ndcg_at_10": 52.73591876029968,
-      "document_seconds": 796.304426792005,
-      "query_seconds": 8.668161125009647
+      "document_seconds": 840.0961453749915,
+      "query_seconds": 9.392019709004671
     }
-  },
-  "note": "Run with evals/conteb.py before reports recorded a commit; the two tasks use the same scoring as the MLX reports."
+  }
 }
