@@ -80,6 +80,7 @@ def test_sliced_attention_matches_whole(monkeypatch):
     value = mx.random.normal((2, 2, 40, 16))
     mask = mx.array([[True] * 40, [True] * 25 + [False] * 15])[:, None, None, :]
     whole = text._sliced_attention(query, key, value, 0.25, mask)
+    monkeypatch.setattr(text, "SLICE_ABOVE_TOKENS", 0)
     monkeypatch.setattr(text, "QUERY_SLICE_TOKENS", 7)
     sliced = text._sliced_attention(query, key, value, 0.25, mask)
     assert np.allclose(np.array(whole), np.array(sliced), atol=1e-6)
