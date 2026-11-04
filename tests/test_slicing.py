@@ -9,8 +9,9 @@ def test_sliced_convolution_is_bit_identical(monkeypatch):
     conv = text.CausalConv(6, 4)
     conv.weight = mx.random.normal((6, 1, 4))
     x = mx.random.normal((2, 2500, 6))
-    monkeypatch.setattr(text, "CONV_SLICE_TOKENS", 10_000)
+    monkeypatch.setattr(text, "SLICE_ABOVE_TOKENS", 10_000)
     whole = conv(x)
+    monkeypatch.setattr(text, "SLICE_ABOVE_TOKENS", 0)
     monkeypatch.setattr(text, "CONV_SLICE_TOKENS", 7)
     sliced = conv(x)
 
@@ -24,8 +25,9 @@ def test_short_input_matches_slice_boundaries(monkeypatch, length):
     conv = text.CausalConv(2, 4)
     conv.weight = mx.random.normal((2, 1, 4))
     x = mx.random.normal((1, length, 2))
-    monkeypatch.setattr(text, "CONV_SLICE_TOKENS", 10_000)
+    monkeypatch.setattr(text, "SLICE_ABOVE_TOKENS", 10_000)
     whole = conv(x)
+    monkeypatch.setattr(text, "SLICE_ABOVE_TOKENS", 0)
     monkeypatch.setattr(text, "CONV_SLICE_TOKENS", 2)
 
     assert mx.array_equal(whole, conv(x)).item()

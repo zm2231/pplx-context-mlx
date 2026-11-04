@@ -67,13 +67,14 @@ def _rotate(x: mx.array, cos: mx.array, sin: mx.array) -> mx.array:
 
 QUERY_SLICE_TOKENS = 512
 CONV_SLICE_TOKENS = 1024
+SLICE_ABOVE_TOKENS = 2048
 
 
 def _sliced_attention(
     query: mx.array, key: mx.array, value: mx.array, scale: float, mask: mx.array | None
 ) -> mx.array:
     length = query.shape[2]
-    if length <= QUERY_SLICE_TOKENS:
+    if length <= SLICE_ABOVE_TOKENS:
         return mx.fast.scaled_dot_product_attention(query, key, value, scale=scale, mask=mask)
     parts = []
     for start in range(0, length, QUERY_SLICE_TOKENS):
@@ -134,7 +135,7 @@ class CausalConv(nn.Module):
         context = self.weight.shape[-1] - 1
         length = x.shape[1]
         padded = mx.pad(x, [(0, 0), (context, 0), (0, 0)])
-        if length <= CONV_SLICE_TOKENS:
+        if length <= SLICE_ABOVE_TOKENS:
             return self._convolve(padded, length)
         parts = []
         for start in range(0, length, CONV_SLICE_TOKENS):
@@ -174,7 +175,7 @@ class GatedDeltaNet(nn.Module):
         key = key.reshape(batch, length, self.num_k_heads, self.k_dim).astype(mx.float32)
         value = value.reshape(batch, length, self.num_v_heads, self.v_dim).astype(mx.float32)
         query, key = normalize_qk(query, key, inv_scale=self.k_dim**-0.5, eps=1e-6)
-        if length > CONV_SLICE_TOKENS:
+        if length > SLICE_ABOVE_TOKENS:
             mx.eval(query, key, value)
         out, _ = gated_delta_update(
             query,
