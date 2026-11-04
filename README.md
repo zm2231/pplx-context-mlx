@@ -1,17 +1,28 @@
 # pplx-context-mlx
 
-Perplexity's [pplx-embed-v2-context](https://huggingface.co/perplexity-ai/pplx-embed-v2-context-0.6b) contextual embeddings on Apple silicon with MLX. Loads the upstream checkpoint unchanged, with no conversion step, PyTorch, or Transformers.
+Perplexity's [pplx-embed-v2-context-0.6b](https://huggingface.co/perplexity-ai/pplx-embed-v2-context-0.6b) contextual embeddings on Apple silicon. Each chunk's vector sees the rest of its document, and the upstream checkpoint loads unchanged, with no conversion step, PyTorch, or Transformers.
 
 Independent project; not affiliated with or endorsed by Perplexity.
+
+## Quick start
+
+```bash
+pip install pplx-context-mlx
+```
 
 ```python
 from pplx_context_mlx import load_model
 
-engine = load_model()
-chunks = engine.encode([["First chunk of a document.", "Second chunk, which sees the first."]], normalize_embeddings=True)
+engine = load_model()  # the first call downloads about 2.4 GB of weights
+chunks = engine.encode(
+    [["First chunk of a document.", "Second chunk, which sees the first."]],
+    normalize_embeddings=True,
+)
 query = engine.encode_queries([["What does the second chunk see?"]], normalize_embeddings=True)
 scores = chunks[0] @ query[0][0]
 ```
+
+Each document is a list of chunks, and you get one 1,024-dimensional vector per chunk. Pass `dtype="float16"` to `load_model` for half the weight memory and a slightly faster model.
 
 Page images embed as horizontal bands, with one vector per band:
 
@@ -22,18 +33,44 @@ bands = engine.encode_images([Image.open("page.png")], chunks=8, normalize_embed
 page_score = (bands @ query[0][0]).max()
 ```
 
+From the command line, input is a JSON list of documents:
+
+```bash
+pplx-context-mlx docs.json --dtype float16 --normalize > vectors.json
+```
+
+## At a glance
+
+Measured on an M4 Pro with 64 GB, against upstream PyTorch on CPU. Sections below have the details and the report behind each figure.
+
+| Question | Answer |
+|---|---|
+| Same vectors as upstream? | Within 1 int8 step; lowest cosine 0.999998 at `float32`, 0.99978 at `float16` |
+| Same retrieval scores as the paper? | ViDoRe-V3 55.82 against 55.81; ConTEB within 0.22 on six of eight tasks, with [two gaps upstream shares](#conteb) |
+| How fast? | One query in 7.4 ms; a 7,137-token document in 1.16 s (`float16`), 3 to 12 times upstream CPU |
+| How much memory? | 3.8 GB (`float16`) or 5.5 GB (`float32`) on the speed suite; 13.2 GB at 119,041 tokens (`float16`) |
+
+Not tested: a 16 GB Mac, the 9B model, or a comparison with upstream on a GPU. Vector accuracy against upstream is verified up to 13,871 tokens.
+
 ## Parity
 
-Measured against the upstream PyTorch model at revision `6d1fddab`, FP32 on CPU, over 16 text cases and 8 image cases, including padded batches, multilingual text, and a 13,871-token document.
+Measured against the upstream PyTorch model at revision `6d1fddab`, FP32 on CPU (its PyTorch fallback, not its CUDA fast path), over 16 text cases and 8 image cases, including padded batches, multilingual text, and a 13,871-token document.
 
 | MLX dtype | Largest int8 difference | Lowest cosine | Weights |
 |---|---:|---:|---:|
 | `float32` (default) | 1 step | 0.999998 | 2.38 GB |
 | `float16` | 1 step | 0.99978 | 1.19 GB |
 
-Both rows compare against upstream at FP32. Image pixels match upstream byte for byte on every fixture. On 48 real ViDoRe-V3 page images (384 band vectors), MLX `float32` stays within one int8 step with a lowest cosine of 0.9999986 (`reports/real-pages/summary.json`). Upstream on transformers 5.22.1 stays within one int8 step of the recorded 5.4.0 fixtures, once its missing `config._commit_hash` is set by hand; without that, its code raises `AttributeError` on that version (`reports/compat/transformers-5.22.1-drift.json`). The reference ran on CPU, with upstream's PyTorch fallback rather than its CUDA fast path.
+Both rows compare against upstream at FP32. Other checks:
 
-`scripts/fault_injection.py` breaks nine parts of the model on purpose and confirms the vectors catch each one (`reports/fault-injection.json`). Details are in `reports/parity-*.json`; regenerate with `scripts/make_reference.py` and `scripts/parity_report.py`.
+| Check | Result | Report |
+|---|---|---|
+| Image pixels, every fixture | Byte-for-byte match | `tests/test_images.py` |
+| 48 real ViDoRe-V3 pages, 384 band vectors (`float32`) | Within 1 int8 step, lowest cosine 0.9999986 | `reports/real-pages/summary.json` |
+| Upstream on transformers 5.22.1 against the recorded 5.4.0 fixtures | Within 1 int8 step, once its missing `config._commit_hash` is set by hand; otherwise upstream raises `AttributeError` | `reports/compat/transformers-5.22.1-drift.json` |
+| Nine parts of the model broken on purpose | The vectors catch all nine | `reports/fault-injection.json` |
+
+Regenerate with `scripts/make_reference.py` and `scripts/parity_report.py`. Results are in `reports/parity-*.json`.
 
 ## Retrieval
 
@@ -104,11 +141,9 @@ Results are in `reports/benchmark/`. Reproduce with `scripts/benchmark.py`.
 
 ## Memory
 
-`load_model` caps MLX's buffer cache at 1 GB by default; set `cache_limit_mb` to change it. The cap applies to the whole process, because MLX's cache is process-wide, and a later `load_model` call replaces it.
+`load_model` caps MLX's buffer cache at 1 GB by default; set `cache_limit_mb` to change it. MLX's cache is process-wide, so the cap covers the whole process, and a later `load_model` call replaces it.
 
-Without the cap, a traced run over ESG documents in 32,768-token windows reached 50.47 GB of cache with 2.38 GB of active memory, then ended at window 10 of 38 without a traceback (`reports/memory/uncapped-esg-trace.log`). An earlier run of that task exited with code 137. What killed them was not identified. The same traced workload with the cap holds the cache near 1 GB and completes all 38 windows (`reports/memory/capped-esg-trace.log`).
-
-Peak footprints below are measured from the OS and include the cache. Times are indicative: the document-length runs were not held to the load limits above.
+Peak footprints below come from the OS and include the cache. All are for the 0.6B model. Times are indicative, because these runs were not held to the load limits above.
 
 | Tokens | `float16` time | `float16` peak | `float32` time | `float32` peak |
 |---:|---:|---:|---:|---:|
@@ -117,12 +152,17 @@ Peak footprints below are measured from the OS and include the cache. Times are 
 | 59,041 | 42.0 s | 8.0 GB | | |
 | 119,041 | 171 s | 13.2 GB | | |
 
-Upstream on CPU measured a lower footprint on the speed workloads, 2.6 GB against 5.5 GB for MLX `float32`. No memory advantage over upstream is claimed.
+Upstream on CPU measured a lower footprint on the speed workloads, 2.6 GB against 5.5 GB for MLX `float32`, so no memory advantage over upstream is claimed.
 
-Attention scores queries in slices, so memory stays far below the square of the document length. Vector accuracy against upstream is verified up to 13,871 tokens. Very long inputs are possible, but they are not automatically better; see ESG above. Results are in `reports/`.
+Attention scores queries in slices, which keeps memory far below the square of the document length. Very long inputs are possible, but they are not automatically better; see [ESG](#conteb).
+
+**Why the cap exists.** Without it, a traced run over ESG documents in 32,768-token windows reached 50.47 GB of cache with 2.38 GB of active memory, then ended at window 10 of 38 without a traceback (`reports/memory/uncapped-esg-trace.log`). An earlier run of that task exited with code 137. What killed them was not identified. With the cap, the same workload holds the cache near 1 GB and completes all 38 windows (`reports/memory/capped-esg-trace.log`).
 
 ## Scope
 
-Tested with `pplx-embed-v2-context-0.6b` only. This package contains no model weights and downloads them from Perplexity's repository. Perplexity's model cards for `pplx-embed-v2-context-9b` and `pplx-embed-v2-late-0.6b` declare MIT; the `0.6b` context card does not currently carry a license tag. Video input is not supported.
+- **Models:** tested with `pplx-embed-v2-context-0.6b` only.
+- **Inputs:** text and page images. Video is not supported.
+- **Weights:** this package contains none and downloads them from Perplexity's repository.
+- **License:** the code is MIT. Perplexity's cards for `pplx-embed-v2-context-9b` and `pplx-embed-v2-late-0.6b` declare MIT; the `0.6b` context card does not currently carry a license tag.
 
 Third-party notices are in `NOTICE`.

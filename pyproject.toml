@@ -25,6 +25,10 @@ test = ["pytest>=8"]
 eval = ["datasets>=3"]
 reference = ["torch>=2.8", "transformers==5.4.0", "torchvision", "pillow", "safetensors", "tqdm"]
 
+[project.urls]
+Repository = "https://github.com/zm2231/pplx-context-mlx"
+Model = "https://huggingface.co/perplexity-ai/pplx-embed-v2-context-0.6b"
+
 [project.scripts]
 pplx-context-mlx = "pplx_context_mlx.cli:main"
 
