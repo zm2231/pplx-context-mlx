@@ -70,6 +70,12 @@ LINEAR_SLICE_TOKENS = 1024
 SLICE_ABOVE_TOKENS = 2048
 
 
+def _slices(length: int, size: int) -> list[tuple[int, int]]:
+    # A short final slice takes a different matmul path and rounds differently, so it joins the one before.
+    starts = list(range(0, max(length - size + 1, 1), size))
+    return list(zip(starts, [*starts[1:], length], strict=True))
+
+
 def _sliced_attention(
     query: mx.array, key: mx.array, value: mx.array, scale: float, mask: mx.array | None
 ) -> mx.array:
@@ -77,10 +83,8 @@ def _sliced_attention(
     if length <= SLICE_ABOVE_TOKENS:
         return mx.fast.scaled_dot_product_attention(query, key, value, scale=scale, mask=mask)
     parts = []
-    for start in range(0, length, QUERY_SLICE_TOKENS):
-        part = mx.fast.scaled_dot_product_attention(
-            query[:, :, start : start + QUERY_SLICE_TOKENS], key, value, scale=scale, mask=mask
-        )
+    for start, stop in _slices(length, QUERY_SLICE_TOKENS):
+        part = mx.fast.scaled_dot_product_attention(query[:, :, start:stop], key, value, scale=scale, mask=mask)
         mx.eval(part)
         parts.append(part)
     return mx.concatenate(parts, axis=2)
@@ -197,8 +201,8 @@ class GatedDeltaNet(nn.Module):
         mx.eval(a, b)
         parts = []
         state = None
-        for start in range(0, length, LINEAR_SLICE_TOKENS):
-            part, state = self._step(x, a, b, start, min(start + LINEAR_SLICE_TOKENS, length), state)
+        for start, stop in _slices(length, LINEAR_SLICE_TOKENS):
+            part, state = self._step(x, a, b, start, stop, state)
             mx.eval(part, state)
             parts.append(part)
         return mx.concatenate(parts, axis=1)

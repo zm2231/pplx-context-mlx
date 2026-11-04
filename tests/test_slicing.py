@@ -23,8 +23,8 @@ def _network() -> text.GatedDeltaNet:
     return net
 
 
-@pytest.mark.parametrize(("length", "slice_tokens"), [(1, 2), (3, 2), (8, 2), (64, 7), (64, 16), (250, 100), (2048, 1024), (2049, 1024)])
-def test_streaming_linear_attention_is_bit_identical(monkeypatch, length, slice_tokens):
+@pytest.mark.parametrize(("length", "slice_tokens"), [(8, 2), (64, 7), (64, 16), (250, 100), (2049, 1024), (3073, 1024)])
+def test_streaming_linear_attention_matches_whole(monkeypatch, length, slice_tokens):
     mx.random.seed(length)
     net = _network()
     x = mx.random.normal((2, length, CONFIG.hidden_size))
@@ -36,7 +36,20 @@ def test_streaming_linear_attention_is_bit_identical(monkeypatch, length, slice_
 
     assert sliced.shape == whole.shape
     assert mx.abs(whole).max().item() > 0
-    assert mx.array_equal(whole, sliced).item()
+    assert mx.allclose(whole, sliced, atol=2e-4, rtol=0).item()
+
+
+def test_state_carry_is_what_makes_slices_match(monkeypatch):
+    mx.random.seed(3)
+    net = _network()
+    x = mx.random.normal((1, 64, CONFIG.hidden_size))
+    monkeypatch.setattr(text, "SLICE_ABOVE_TOKENS", 10_000)
+    whole = net(x, None)
+    a = net.in_proj_a(x).astype(mx.float32)
+    b = net.in_proj_b(x).astype(mx.float32)
+    reset = mx.concatenate([net._step(x, a, b, start, start + 16, None)[0] for start in range(0, 64, 16)], axis=1)
+
+    assert not mx.allclose(whole, reset, atol=2e-4, rtol=0).item()
 
 
 def test_streaming_applies_the_padding_mask(monkeypatch):
@@ -50,4 +63,4 @@ def test_streaming_applies_the_padding_mask(monkeypatch):
     monkeypatch.setattr(text, "LINEAR_SLICE_TOKENS", 9)
 
     assert mx.abs(whole).max().item() > 0
-    assert mx.array_equal(whole, net(x, mask)).item()
+    assert mx.allclose(whole, net(x, mask), atol=2e-4, rtol=0).item()

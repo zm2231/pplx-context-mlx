@@ -86,6 +86,21 @@ def test_sliced_attention_matches_whole(monkeypatch):
     assert np.allclose(np.array(whole), np.array(sliced), atol=1e-6)
 
 
+@pytest.mark.parametrize("tokens", [2049, 2100, 2500, 3071, 3072, 3073, 4096, 5121])
+def test_streaming_matches_whole_bit_for_bit(engine, monkeypatch, tokens):
+    words = "alpha beta gamma delta epsilon zeta eta theta iota kappa lambda mu nu xi omicron pi rho sigma tau upsilon "
+    features = engine.tokenizer.encode_documents([[words * 300]])
+    input_ids = mx.array(features["input_ids"][:, :tokens])
+    mask = mx.array(features["attention_mask"][:, :tokens])
+    monkeypatch.setattr(text, "SLICE_ABOVE_TOKENS", 10**9)
+    whole = engine.model.hidden_states(input_ids, mask)
+    mx.eval(whole)
+    monkeypatch.setattr(text, "SLICE_ABOVE_TOKENS", 2048)
+    sliced = engine.model.hidden_states(input_ids, mask)
+    mx.eval(sliced)
+    assert mx.array_equal(whole, sliced).item()
+
+
 def test_context_changes_the_vector_for_identical_chunk_text(engine):
     first = engine.encode([["Our quarterly revenue grew by a third.", "It was the best result in company history."]])[0][1]
     second = engine.encode([["The marathon runner broke the national record.", "It was the best result in company history."]])[0][1]
