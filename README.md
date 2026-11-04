@@ -89,7 +89,7 @@ So more context is not automatically better on this task. Which setting the pape
 
 ## Speed
 
-On an M4 Pro with 64 GB. Each run started with no CI virtual machines or inference jobs active and with 1-minute and 5-minute load averages under 2.7; other background services were running, and each report records its load. MLX values are medians of three runs. Upstream ran on CPU at its best thread count for each workload, chosen from 1, 2, 4 and 6, because 1 thread was fastest for short inputs and 4 to 6 for long ones. No CUDA comparison was run.
+On an M4 Pro with 64 GB. Each run started with 1-minute and 5-minute load averages under 2.7, as recorded in its report. Background services were running. MLX values are medians of three runs. Upstream ran on CPU at its best thread count for each workload, chosen from 1, 2, 4 and 6, because 1 thread was fastest for short inputs and 4 to 6 for long ones. No CUDA comparison was run.
 
 | Workload | MLX `float16` | MLX `float32` | Upstream CPU |
 |---|---:|---:|---:|

@@ -106,9 +106,7 @@ def run_task(engine, name: str, path: str, split: str, output: Path, window_toke
     top = np.zeros((len(queries), TOP_K), dtype=np.int32)
     for start in range(0, len(queries), 512):
         scores = query_vectors[start : start + 512] @ corpus.T
-        part = np.argpartition(-scores, TOP_K, axis=1)[:, :TOP_K]
-        chosen = np.take_along_axis(scores, part, axis=1)
-        top[start : start + 512] = np.take_along_axis(part, np.argsort(-chosen, axis=1), axis=1)
+        top[start : start + 512] = np.argsort(-scores, axis=1, kind="stable")[:, :TOP_K]
     per_query = np.array(
         [_ndcg([ids[item] for item in top[index]], set(gold[index])) for index in range(len(queries))], dtype=np.float32
     )
