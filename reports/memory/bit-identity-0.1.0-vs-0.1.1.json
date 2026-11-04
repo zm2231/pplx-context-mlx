@@ -1,0 +1,14 @@
+{
+  "bit_identical": {
+    "float32-long": true,
+    "float32-padded": true,
+    "float32-medium": true,
+    "float32-queries": true,
+    "float32-image": true,
+    "float16-long": true,
+    "float16-padded": true,
+    "float16-medium": true,
+    "float16-queries": true,
+    "float16-image": true
+  }
+}

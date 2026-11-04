@@ -47,8 +47,8 @@ Measured on an M4 Pro with 64 GB, against upstream PyTorch on CPU. Sections belo
 |---|---|
 | Same vectors as upstream? | Within 1 int8 step; lowest cosine 0.999998 at `float32`, 0.99978 at `float16` |
 | Same retrieval scores as the paper? | ViDoRe-V3 55.82 against 55.81; ConTEB within 0.22 on six of eight tasks, with [two gaps upstream shares](#conteb) |
-| How fast? | One query in 7.4 ms; a 7,137-token document in 1.16 s (`float16`), 3 to 12 times upstream CPU |
-| How much memory? | 3.8 GB (`float16`) or 5.5 GB (`float32`) on the speed suite; 13.2 GB at 119,041 tokens (`float16`) |
+| How fast? | One query in 7.5 ms; a 7,137-token document in 1.23 s (`float16`), 3 to 12 times upstream CPU |
+| How much memory? | 2.9 GB (`float16`) or 4.3 GB (`float32`) on the speed suite; 12.3 GB at 113,281 tokens (`float16`) |
 
 Not tested: a 16 GB Mac, the 9B model, or a comparison with upstream on a GPU. Vector accuracy against upstream is verified up to 13,871 tokens.
 
@@ -130,33 +130,43 @@ On an M4 Pro with 64 GB. Each run started with 1-minute and 5-minute load averag
 
 | Workload | MLX `float16` | MLX `float32` | Upstream CPU |
 |---|---:|---:|---:|
-| One query | 7.4 ms | 11.4 ms | 71.9 ms |
-| Queries per second, batches of 32 | 600 | 522 | 50 |
+| One query | 7.5 ms | 11.4 ms | 71.9 ms |
+| Queries per second, batches of 32 | 601 | 523 | 51 |
 | 224-token document | 0.029 s | 0.032 s | 0.160 s |
-| 1,785-token document | 0.20 s | 0.24 s | 1.13 s |
-| 7,137-token document | 1.16 s | 1.43 s | 4.55 s |
-| A4 page, 8 bands | 0.87 s | 1.03 s | 4.11 s |
+| 1,785-token document | 0.23 s | 0.30 s | 1.13 s |
+| 7,137-token document | 1.23 s | 1.52 s | 4.53 s |
+| A4 page, 8 bands | 0.93 s | 1.14 s | 4.12 s |
 
 Results are in `reports/benchmark/`. Reproduce with `scripts/benchmark.py`.
 
 ## Memory
 
-`load_model` caps MLX's buffer cache at 1 GB by default; set `cache_limit_mb` to change it. MLX's cache is process-wide, so the cap covers the whole process, and a later `load_model` call replaces it.
+Peak memory on the speed suite:
 
-Peak footprints below come from the OS and include the cache. All are for the 0.6B model. Times are indicative, because these runs were not held to the load limits above.
+| Runtime | Footprint | Resident |
+|---|---:|---:|
+| MLX `float16` | 2.9 GB | 1.3 GB |
+| MLX `float32` | 4.3 GB | 2.9 GB |
+| Upstream CPU, FP32 | 2.6 GB | 4.3 GB |
+
+Each measure flatters one side: MLX's Metal buffers count toward footprint more than resident memory, and upstream's resident figure is 1.7 GB above its footprint. Taking each runtime's larger figure, `float32` matches upstream at 4.3 GB and `float16` uses about a third less. Results are in `reports/benchmark/`.
+
+Long documents, all on the 0.6B model. Times are indicative, because these runs were not held to the load limits above (`reports/context-limit.jsonl`).
 
 | Tokens | `float16` time | `float16` peak | `float32` time | `float32` peak |
 |---:|---:|---:|---:|---:|
-| 13,681 | 3.0 s | 4.1 GB | 3.8 s | 6.0 GB |
-| 29,521 | 10.8 s | 5.3 GB | 17.9 s | 9.1 GB |
-| 59,041 | 42.0 s | 8.0 GB | | |
-| 119,041 | 171 s | 13.2 GB | | |
+| 12,961 | 2.8 s | 3.4 GB | 3.5 s | 4.8 GB |
+| 28,081 | 9.4 s | 4.1 GB | 14.6 s | 6.2 GB |
+| 56,161 | 36.8 s | 6.8 GB | | |
+| 113,281 | 141 s | 12.3 GB | | |
 
-Upstream on CPU measured a lower footprint on the speed workloads, 2.6 GB against 5.5 GB for MLX `float32`, so no memory advantage over upstream is claimed.
+Peaks here are OS footprint, including the cache. Very long inputs are possible, but they are not automatically better; see [ESG](#conteb).
 
-Attention scores queries in slices, which keeps memory far below the square of the document length. Very long inputs are possible, but they are not automatically better; see [ESG](#conteb).
+**What keeps it low.** Attention and the causal convolution run in slices, weights are cast one tensor at a time, and `load_model` caps MLX's buffer cache at 256 MB. Set `cache_limit_mb` to change the cap. MLX's cache is process-wide, so the cap covers the whole process, and a later `load_model` call replaces it.
 
-**Why the cap exists.** Without it, a traced run over ESG documents in 32,768-token windows reached 50.47 GB of cache with 2.38 GB of active memory, then ended at window 10 of 38 without a traceback (`reports/memory/uncapped-esg-trace.log`). An earlier run of that task exited with code 137. What killed them was not identified. With the cap, the same workload holds the cache near 1 GB and completes all 38 windows (`reports/memory/capped-esg-trace.log`).
+**Changes since 0.1.0.** Version 0.1.1 lowered these peaks from 5.5 GB (`float32`) and 3.8 GB (`float16`) on the speed suite. Mid-length documents got slower in exchange: 1,785 tokens went from 0.24 s to 0.30 s at `float32`. Outputs did not change: projected vectors are bit-identical to 0.1.0 on long, padded, query, and image samples at both dtypes (`reports/memory/bit-identity-0.1.0-vs-0.1.1.json`), so the retrieval scores above carry over.
+
+**Why the cache is capped.** Without a cap, a traced run over ESG documents in 32,768-token windows reached 50.47 GB of cache with 2.38 GB of active memory, then ended at window 10 of 38 without a traceback (`reports/memory/uncapped-esg-trace.log`). An earlier run of that task exited with code 137. What killed them was not identified. With a 1 GB cap, the same workload holds the cache near 1 GB and completes all 38 windows (`reports/memory/capped-esg-trace.log`).
 
 ## Scope
 

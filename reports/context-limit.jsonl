@@ -1,6 +1,6 @@
-{"tokens": 13681, "chunks": 57, "dtype": "float16", "vectors": 57, "seconds": 3.0, "tokens_per_second": 4554, "weights_gb": 1.19, "peak_active_gb": 2.68, "peak_footprint_gb": 4.12}
-{"tokens": 13681, "chunks": 57, "dtype": "float32", "vectors": 57, "seconds": 3.84, "tokens_per_second": 3560, "weights_gb": 2.38, "peak_active_gb": 4.92, "peak_footprint_gb": 6.03}
-{"tokens": 29521, "chunks": 123, "dtype": "float16", "vectors": 123, "seconds": 10.79, "tokens_per_second": 2736, "weights_gb": 1.19, "peak_active_gb": 4.04, "peak_footprint_gb": 5.3}
-{"tokens": 29521, "chunks": 123, "dtype": "float32", "vectors": 123, "seconds": 17.87, "tokens_per_second": 1652, "weights_gb": 2.38, "peak_active_gb": 7.6, "peak_footprint_gb": 9.06}
-{"tokens": 59041, "chunks": 246, "dtype": "float16", "vectors": 246, "seconds": 42.04, "tokens_per_second": 1404, "weights_gb": 1.19, "peak_active_gb": 6.65, "peak_footprint_gb": 7.95}
-{"tokens": 119041, "chunks": 496, "dtype": "float16", "vectors": 496, "seconds": 171.27, "tokens_per_second": 695, "weights_gb": 1.19, "peak_active_gb": 12.2, "peak_footprint_gb": 13.16}
+{"tokens": 12961, "chunks": 54, "dtype": "float16", "vectors": 54, "seconds": 2.83, "tokens_per_second": 4573, "weights_gb": 1.19, "peak_active_gb": 2.85, "peak_footprint_gb": 3.41, "peak_resident_gb": 1.28}
+{"tokens": 12961, "chunks": 54, "dtype": "float32", "vectors": 54, "seconds": 3.53, "tokens_per_second": 3673, "weights_gb": 2.38, "peak_active_gb": 4.2, "peak_footprint_gb": 4.79, "peak_resident_gb": 2.71}
+{"tokens": 28081, "chunks": 117, "dtype": "float16", "vectors": 117, "seconds": 9.42, "tokens_per_second": 2980, "weights_gb": 1.19, "peak_active_gb": 3.57, "peak_footprint_gb": 4.12, "peak_resident_gb": 1.28}
+{"tokens": 28081, "chunks": 117, "dtype": "float32", "vectors": 117, "seconds": 14.58, "tokens_per_second": 1926, "weights_gb": 2.38, "peak_active_gb": 5.28, "peak_footprint_gb": 6.15, "peak_resident_gb": 2.72}
+{"tokens": 56161, "chunks": 234, "dtype": "float16", "vectors": 234, "seconds": 36.8, "tokens_per_second": 1526, "weights_gb": 1.19, "peak_active_gb": 5.94, "peak_footprint_gb": 6.83, "peak_resident_gb": 1.28}
+{"tokens": 113281, "chunks": 472, "dtype": "float16", "vectors": 472, "seconds": 141.24, "tokens_per_second": 802, "weights_gb": 1.19, "peak_active_gb": 10.77, "peak_footprint_gb": 12.34, "peak_resident_gb": 1.28}
