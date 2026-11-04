@@ -103,7 +103,7 @@ nDCG@10 on the official task splits (paper Table 5).
 | Task | Paper | MLX `float32` | MLX `float16` |
 |---|---:|---:|---:|
 | Geography | 94.1 | 94.10 | 94.10 |
-| Football | 79.2 | 79.17 | 79.16 |
+| Football | 79.2 | 79.17 | 79.14 |
 | SQuAD | 87.3 | 87.27 | 87.24 |
 | NarrativeQA | 83.4 | 83.39 | 83.40 |
 | MLDR | 89.8 | 89.65 | 89.78 |
