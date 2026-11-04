@@ -134,7 +134,6 @@ class CausalConv(nn.Module):
         return self.weight.shape[-1] - 1
 
     def __call__(self, window: mx.array, length: int) -> mx.array:
-        """Convolve ``window``, which holds ``context`` leading tokens before the ``length`` being produced."""
         out = window[:, :length] * self.weight[:, 0, 0]
         for tap in range(1, self.weight.shape[-1]):
             out = out + window[:, tap : tap + length] * self.weight[:, 0, tap]

@@ -75,7 +75,7 @@ def _encode_by_document(engine, corpus: Any, chunk_tokens: int, context_tokens: 
     for pages in documents.values():
         chunks, chunk_owners = [], []
         for _, corpus_id, markdown in sorted(pages):
-            page_chunks = [chunk for chunk in _chunks(engine, markdown, chunk_tokens) if chunk]
+            page_chunks = _chunks(engine, markdown, chunk_tokens)
             chunks.extend(page_chunks)
             chunk_owners.extend([corpus_id] * len(page_chunks))
         for window in _windows(engine, chunks, context_tokens):
