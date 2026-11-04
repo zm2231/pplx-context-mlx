@@ -4,7 +4,7 @@
   "commit": "bc3e23a5e0f3018540a6303b8591dc9c08ce7c87",
   "platform": "macOS-27.0.1-arm64-arm-64bit",
   "average_ndcg_at_10": 70.83190977573395,
-  "paper_average_ndcg_at_10": 80.7,
+  "paper_average_ndcg_at_10": 77.65,
   "tasks": {
     "insurance": {
       "paper_ndcg_at_10": 88.0,

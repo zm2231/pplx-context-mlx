@@ -143,7 +143,7 @@ def main() -> None:
         "commit": commit,
         "platform": platform.platform(),
         "average_ndcg_at_10": float(np.mean([item["ndcg_at_10"] for item in results.values()])),
-        "paper_average_ndcg_at_10": 80.7,
+        "paper_average_ndcg_at_10": float(np.mean([item["paper_ndcg_at_10"] for item in results.values()])),
         "tasks": results,
     }
     (args.output / "summary.json").write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
