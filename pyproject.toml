@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pplx-context-mlx"
-version = "0.1.1"
+version = "0.1.2"
 description = "Perplexity pplx-embed-v2-context contextual embeddings on Apple silicon with MLX"
 readme = "README.md"
 license = "MIT"

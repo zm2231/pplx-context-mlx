@@ -59,7 +59,7 @@ class ContextualEngine:
                 vectors = _normalize(vectors)
             mx.eval(vectors)
             matrix = np.array(vectors, dtype=np.float32, copy=True)
-            output.extend(matrix[index, : len(chunks)] for index, chunks in enumerate(batch))
+            output.extend(matrix[index, : len(chunks)].copy() for index, chunks in enumerate(batch))
         return output
 
     def encode(

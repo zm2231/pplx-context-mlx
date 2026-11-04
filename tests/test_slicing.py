@@ -1,33 +1,53 @@
+from types import SimpleNamespace
+
 import mlx.core as mx
 import pytest
 
 from pplx_context_mlx import text
 
+CONFIG = SimpleNamespace(
+    linear_num_key_heads=2,
+    linear_num_value_heads=2,
+    linear_key_head_dim=128,
+    linear_value_head_dim=64,
+    hidden_size=32,
+    linear_conv_kernel_dim=4,
+    rms_norm_eps=1e-6,
+)
 
-def test_sliced_convolution_is_bit_identical(monkeypatch):
-    mx.random.seed(0)
-    conv = text.CausalConv(6, 4)
-    conv.weight = mx.random.normal((6, 1, 4))
-    x = mx.random.normal((2, 2500, 6))
+
+def _network() -> text.GatedDeltaNet:
+    net = text.GatedDeltaNet(CONFIG)
+    net.conv1d.weight = mx.random.normal(net.conv1d.weight.shape)
+    mx.eval(net.parameters())
+    return net
+
+
+@pytest.mark.parametrize(("length", "slice_tokens"), [(1, 2), (3, 2), (8, 2), (64, 7), (64, 16), (250, 100), (2048, 1024), (2049, 1024)])
+def test_streaming_linear_attention_is_bit_identical(monkeypatch, length, slice_tokens):
+    mx.random.seed(length)
+    net = _network()
+    x = mx.random.normal((2, length, CONFIG.hidden_size))
     monkeypatch.setattr(text, "SLICE_ABOVE_TOKENS", 10_000)
-    whole = conv(x)
+    whole = net(x, None)
     monkeypatch.setattr(text, "SLICE_ABOVE_TOKENS", 0)
-    monkeypatch.setattr(text, "CONV_SLICE_TOKENS", 7)
-    sliced = conv(x)
+    monkeypatch.setattr(text, "LINEAR_SLICE_TOKENS", slice_tokens)
+    sliced = net(x, None)
 
+    assert sliced.shape == whole.shape
+    assert mx.abs(whole).max().item() > 0
     assert mx.array_equal(whole, sliced).item()
-    assert sliced.shape == x.shape
 
 
-@pytest.mark.parametrize("length", [1, 3, 8])
-def test_short_input_matches_slice_boundaries(monkeypatch, length):
-    mx.random.seed(1)
-    conv = text.CausalConv(2, 4)
-    conv.weight = mx.random.normal((2, 1, 4))
-    x = mx.random.normal((1, length, 2))
+def test_streaming_applies_the_padding_mask(monkeypatch):
+    mx.random.seed(9)
+    net = _network()
+    x = mx.random.normal((2, 40, CONFIG.hidden_size))
+    mask = mx.array([[True] * 40, [True] * 25 + [False] * 15])
     monkeypatch.setattr(text, "SLICE_ABOVE_TOKENS", 10_000)
-    whole = conv(x)
+    whole = net(x, mask)
     monkeypatch.setattr(text, "SLICE_ABOVE_TOKENS", 0)
-    monkeypatch.setattr(text, "CONV_SLICE_TOKENS", 2)
+    monkeypatch.setattr(text, "LINEAR_SLICE_TOKENS", 9)
 
-    assert mx.array_equal(whole, conv(x)).item()
+    assert mx.abs(whole).max().item() > 0
+    assert mx.array_equal(whole, net(x, mask)).item()

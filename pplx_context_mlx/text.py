@@ -66,7 +66,7 @@ def _rotate(x: mx.array, cos: mx.array, sin: mx.array) -> mx.array:
 
 
 QUERY_SLICE_TOKENS = 512
-CONV_SLICE_TOKENS = 1024
+LINEAR_SLICE_TOKENS = 1024
 SLICE_ABOVE_TOKENS = 2048
 
 
@@ -125,25 +125,16 @@ class CausalConv(nn.Module):
         super().__init__()
         self.weight = mx.zeros((channels, 1, kernel))
 
-    def _convolve(self, window: mx.array, length: int) -> mx.array:
+    @property
+    def context(self) -> int:
+        return self.weight.shape[-1] - 1
+
+    def __call__(self, window: mx.array, length: int) -> mx.array:
+        """Convolve ``window``, which holds ``context`` leading tokens before the ``length`` being produced."""
         out = window[:, :length] * self.weight[:, 0, 0]
         for tap in range(1, self.weight.shape[-1]):
             out = out + window[:, tap : tap + length] * self.weight[:, 0, tap]
         return out
-
-    def __call__(self, x: mx.array) -> mx.array:
-        context = self.weight.shape[-1] - 1
-        length = x.shape[1]
-        padded = mx.pad(x, [(0, 0), (context, 0), (0, 0)])
-        if length <= SLICE_ABOVE_TOKENS:
-            return self._convolve(padded, length)
-        parts = []
-        for start in range(0, length, CONV_SLICE_TOKENS):
-            size = min(CONV_SLICE_TOKENS, length - start)
-            part = self._convolve(padded[:, start : start + size + context], size)
-            mx.eval(part)
-            parts.append(part)
-        return mx.concatenate(parts, axis=1)
 
 
 class GatedDeltaNet(nn.Module):
@@ -166,29 +157,62 @@ class GatedDeltaNet(nn.Module):
         self.norm = GatedRMSNorm(self.v_dim, config.rms_norm_eps)
         self.out_proj = nn.Linear(value_width, config.hidden_size, bias=False)
 
-    def __call__(self, x: mx.array, mask: mx.array | None) -> mx.array:
-        if mask is not None:
-            x = x * mask[..., None].astype(x.dtype)
-        batch, length, _ = x.shape
-        query, key, value = mx.split(nn.silu(self.conv1d(self.in_proj_qkv(x))), self.splits, axis=-1)
-        query = query.reshape(batch, length, self.num_k_heads, self.k_dim).astype(mx.float32)
-        key = key.reshape(batch, length, self.num_k_heads, self.k_dim).astype(mx.float32)
-        value = value.reshape(batch, length, self.num_v_heads, self.v_dim).astype(mx.float32)
+    def _step(
+        self, x: mx.array, a: mx.array, b: mx.array, start: int, stop: int, state: mx.array | None
+    ) -> tuple[mx.array, mx.array]:
+        batch = x.shape[0]
+        size = stop - start
+        left = max(0, start - self.conv1d.context)
+        window = self.in_proj_qkv(x[:, left:stop])
+        window = mx.pad(window, [(0, 0), (self.conv1d.context - (start - left), 0), (0, 0)])
+        query, key, value = mx.split(nn.silu(self.conv1d(window, size)), self.splits, axis=-1)
+        query = query.reshape(batch, size, self.num_k_heads, self.k_dim).astype(mx.float32)
+        key = key.reshape(batch, size, self.num_k_heads, self.k_dim).astype(mx.float32)
+        value = value.reshape(batch, size, self.num_v_heads, self.v_dim).astype(mx.float32)
         query, key = normalize_qk(query, key, inv_scale=self.k_dim**-0.5, eps=1e-6)
-        if length > SLICE_ABOVE_TOKENS:
-            mx.eval(query, key, value)
-        out, _ = gated_delta_update(
+        part = x[:, start:stop]
+        out, state = gated_delta_update(
             query,
             key,
             value,
-            self.in_proj_a(x).astype(mx.float32),
-            self.in_proj_b(x).astype(mx.float32),
+            a[:, start:stop],
+            b[:, start:stop],
             self.A_log.astype(mx.float32),
             self.dt_bias.astype(mx.float32),
+            state=state,
         )
-        gate = self.in_proj_z(x).reshape(batch, length, self.num_v_heads, self.v_dim)
+        gate = self.in_proj_z(part).reshape(batch, size, self.num_v_heads, self.v_dim)
         out = self.norm(out.astype(x.dtype), gate)
-        return self.out_proj(out.reshape(batch, length, -1))
+        return self.out_proj(out.reshape(batch, size, -1)), state
+
+    def __call__(self, x: mx.array, mask: mx.array | None) -> mx.array:
+        if mask is not None:
+            x = x * mask[..., None].astype(x.dtype)
+        length = x.shape[1]
+        # Matmul rounding depends on the input shape for these narrow projections, so they run whole.
+        a = self.in_proj_a(x).astype(mx.float32)
+        b = self.in_proj_b(x).astype(mx.float32)
+        if length <= SLICE_ABOVE_TOKENS:
+            return self._step(x, a, b, 0, length, None)[0]
+        mx.eval(a, b)
+        parts = []
+        state = None
+        for start in range(0, length, LINEAR_SLICE_TOKENS):
+            part, state = self._step(x, a, b, start, min(start + LINEAR_SLICE_TOKENS, length), state)
+            mx.eval(part, state)
+            parts.append(part)
+        return mx.concatenate(parts, axis=1)
+
+
+class MappedEmbedding:
+    """Token table read from the checkpoint file on demand: it never occupies GPU memory."""
+
+    def __init__(self, table: np.ndarray, dtype: mx.Dtype):
+        self.table = table
+        self.dtype = dtype
+
+    def __call__(self, input_ids: mx.array) -> mx.array:
+        return mx.array(np.asarray(self.table[np.array(input_ids)])).astype(self.dtype)
 
 
 class MLP(nn.Module):
@@ -225,7 +249,7 @@ class DecoderLayer(nn.Module):
 class TextModel(nn.Module):
     def __init__(self, config: TextConfig):
         super().__init__()
-        self.embed_tokens = nn.Embedding(config.vocab_size, config.hidden_size)
+        self.embed_tokens: MappedEmbedding | None = None
         self.layers = [DecoderLayer(config, kind) for kind in config.layer_types]
         self.norm = RMSNorm(config.hidden_size, config.rms_norm_eps)
         self.rotary = RotaryEmbedding(config)

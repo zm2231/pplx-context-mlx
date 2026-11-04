@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from collections.abc import Callable
+
 import mlx.core as mx
 import numpy as np
 from mlx import nn
@@ -33,7 +35,8 @@ class PplxContextualModel(nn.Module):
         super().__init__()
         self.config = config
         self.language_model = TextModel(config.text)
-        self.visual = VisionModel(config.vision)
+        self.visual: VisionModel | None = None
+        self.vision_loader: Callable[[], VisionModel] | None = None
         self.contextual_projection = nn.Linear(config.text.hidden_size, config.embedding_dim, bias=False)
 
     def hidden_states(
@@ -59,6 +62,8 @@ class PplxContextualModel(nn.Module):
     def embed_images(self, features: dict[str, np.ndarray]) -> mx.array:
         input_ids = mx.array(features["input_ids"])
         batch, length = input_ids.shape
+        if self.visual is None:
+            self.visual = self.vision_loader()
         merged = self.visual(mx.array(features["pixel_values"]), features["image_grid_thw"])
         indices = np.flatnonzero(features["input_ids"].reshape(-1) == self.config.image_token_id)
         if indices.size != merged.shape[0]:

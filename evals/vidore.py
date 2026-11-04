@@ -45,7 +45,46 @@ def _ndcg(ranked: list[int], gains: dict[int, int]) -> float:
     return dcg / ideal if ideal else 0.0
 
 
-def run_task(engine, task: str, chunk_tokens: int | None) -> dict:
+def _windows(engine, chunks: list[str], limit: int) -> list[list[str]]:
+    windows: list[list[str]] = [[]]
+    used = 0
+    for chunk in chunks:
+        cost = len(engine.tokenizer._tokenizer.encode(chunk).ids) + 1
+        if windows[-1] and used + cost > limit:
+            windows.append([])
+            used = 0
+        windows[-1].append(chunk)
+        used += cost
+    return windows
+
+
+def _encode_by_page(engine, corpus: Any, chunk_tokens: int | None) -> tuple[list[np.ndarray], list[int]]:
+    vectors, owners = [], []
+    for row in corpus:
+        chunks = _chunks(engine, row["markdown"] or "", chunk_tokens)
+        vectors.append(engine.encode([chunks], batch_size=1, normalize_embeddings=True)[0])
+        owners.extend([int(row["corpus_id"])] * len(chunks))
+    return vectors, owners
+
+
+def _encode_by_document(engine, corpus: Any, chunk_tokens: int, context_tokens: int) -> tuple[list[np.ndarray], list[int]]:
+    documents: dict[str, list[tuple[int, int, str]]] = {}
+    for row in corpus:
+        documents.setdefault(row["doc_id"], []).append((int(row["page_number_in_doc"]), int(row["corpus_id"]), row["markdown"] or ""))
+    vectors, owners = [], []
+    for pages in documents.values():
+        chunks, chunk_owners = [], []
+        for _, corpus_id, markdown in sorted(pages):
+            page_chunks = [chunk for chunk in _chunks(engine, markdown, chunk_tokens) if chunk]
+            chunks.extend(page_chunks)
+            chunk_owners.extend([corpus_id] * len(page_chunks))
+        for window in _windows(engine, chunks, context_tokens):
+            vectors.append(engine.encode([window], batch_size=1, normalize_embeddings=True)[0])
+        owners.extend(chunk_owners)
+    return vectors, owners
+
+
+def run_task(engine, task: str, chunk_tokens: int | None, context_tokens: int | None = None) -> dict:
     repo = f"vidore/vidore_v3_{task}"
     corpus: Any = load_dataset(repo, "corpus", split="test").remove_columns(["image"])
     queries: Any = load_dataset(repo, "queries", split="test")
@@ -54,11 +93,10 @@ def run_task(engine, task: str, chunk_tokens: int | None) -> dict:
     for row in qrels:
         gains.setdefault(str(row["query_id"]), {})[int(row["corpus_id"])] = int(row["score"])
     started = time.perf_counter()
-    vectors, owners = [], []
-    for row in corpus:
-        chunks = _chunks(engine, row["markdown"] or "", chunk_tokens)
-        vectors.append(engine.encode([chunks], batch_size=1, normalize_embeddings=True)[0])
-        owners.extend([int(row["corpus_id"])] * len(chunks))
+    if context_tokens is None:
+        vectors, owners = _encode_by_page(engine, corpus, chunk_tokens)
+    else:
+        vectors, owners = _encode_by_document(engine, corpus, chunk_tokens or 128, context_tokens)
     matrix = np.concatenate(vectors).astype(np.float32)
     owner = np.array(owners)
     document_seconds = time.perf_counter() - started
@@ -90,6 +128,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Score text-to-markdown retrieval on ViDoRe-V3, one chunk per page by default.")
     parser.add_argument("--dtype", default="float32")
     parser.add_argument("--chunk-tokens", type=int, help="Split each page into chunks of this many tokens")
+    parser.add_argument("--context-tokens", type=int, help="Share context across a document's pages, in windows of this many tokens")
     parser.add_argument("--tasks", nargs="+", default=list(TASKS), choices=list(TASKS))
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
@@ -97,12 +136,13 @@ def main() -> None:
     results = {}
     for task in args.tasks:
         paper = TASKS[task][0 if args.chunk_tokens is None else 1]
-        results[task] = {"paper_ndcg_at_10": paper, **run_task(engine, task, args.chunk_tokens)}
+        results[task] = {"paper_ndcg_at_10": paper, **run_task(engine, task, args.chunk_tokens, args.context_tokens)}
         print(task, json.dumps({key: value for key, value in results[task].items() if key != "languages"}), flush=True)
     commit = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True, check=False).stdout.strip()
     summary = {
         "dtype": args.dtype,
         "chunk_tokens": args.chunk_tokens,
+        "context_tokens": args.context_tokens,
         "commit": commit,
         "platform": platform.platform(),
         "average_ndcg_at_10": float(np.mean([item["ndcg_at_10"] for item in results.values()])),
