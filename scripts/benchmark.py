@@ -9,7 +9,7 @@ import subprocess
 import time
 from pathlib import Path
 
-from footprint import peak_footprint_gb
+from footprint import peak_footprint_gb, peak_resident_gb
 from PIL import Image
 
 SENTENCE = "Researchers measured the effect across many sites, and it remained stable over several long seasons. "
@@ -108,6 +108,7 @@ def main() -> None:
     result.update(
         {
             "peak_footprint_gb": peak_footprint_gb(),
+            "peak_resident_gb": peak_resident_gb(),
             "chip": chip.strip(),
             "memory_gb": memory // 2**30,
             "platform": platform.platform(),

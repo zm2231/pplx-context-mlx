@@ -110,7 +110,7 @@ def load_model(
     path_or_repo: str = CHECKPOINT_0_6B,
     revision: str | None = None,
     dtype: str = "float32",
-    cache_limit_mb: int = 1024,
+    cache_limit_mb: int = 256,
 ) -> ContextualEngine:
     validate_dtype(dtype)
     mx.set_cache_limit(cache_limit_mb * 1024 * 1024)

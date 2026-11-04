@@ -13,7 +13,7 @@ FIXTURES = Path(__file__).parent / "fixtures"
 CASES = json.loads((FIXTURES / "cases.json").read_text(encoding="utf-8"))
 QUANTIZED_MAX_ABS_ERROR = 1
 MIN_COSINE = 0.9999
-CACHE_BOUND_BYTES = 2 * 1024**3
+CACHE_BOUND_BYTES = 1024**3
 
 
 @pytest.fixture(scope="module")

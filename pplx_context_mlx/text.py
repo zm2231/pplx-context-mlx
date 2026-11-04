@@ -65,7 +65,8 @@ def _rotate(x: mx.array, cos: mx.array, sin: mx.array) -> mx.array:
     return mx.concatenate([head * cos + turned * sin, x[..., dim:]], axis=-1)
 
 
-QUERY_SLICE_TOKENS = 2048
+QUERY_SLICE_TOKENS = 512
+CONV_SLICE_TOKENS = 1024
 
 
 def _sliced_attention(
@@ -123,14 +124,25 @@ class CausalConv(nn.Module):
         super().__init__()
         self.weight = mx.zeros((channels, 1, kernel))
 
-    def __call__(self, x: mx.array) -> mx.array:
-        kernel = self.weight.shape[-1]
-        length = x.shape[1]
-        padded = mx.pad(x, [(0, 0), (kernel - 1, 0), (0, 0)])
-        out = padded[:, :length] * self.weight[:, 0, 0]
-        for tap in range(1, kernel):
-            out = out + padded[:, tap : tap + length] * self.weight[:, 0, tap]
+    def _convolve(self, window: mx.array, length: int) -> mx.array:
+        out = window[:, :length] * self.weight[:, 0, 0]
+        for tap in range(1, self.weight.shape[-1]):
+            out = out + window[:, tap : tap + length] * self.weight[:, 0, tap]
         return out
+
+    def __call__(self, x: mx.array) -> mx.array:
+        context = self.weight.shape[-1] - 1
+        length = x.shape[1]
+        padded = mx.pad(x, [(0, 0), (context, 0), (0, 0)])
+        if length <= CONV_SLICE_TOKENS:
+            return self._convolve(padded, length)
+        parts = []
+        for start in range(0, length, CONV_SLICE_TOKENS):
+            size = min(CONV_SLICE_TOKENS, length - start)
+            part = self._convolve(padded[:, start : start + size + context], size)
+            mx.eval(part)
+            parts.append(part)
+        return mx.concatenate(parts, axis=1)
 
 
 class GatedDeltaNet(nn.Module):
@@ -162,6 +174,8 @@ class GatedDeltaNet(nn.Module):
         key = key.reshape(batch, length, self.num_k_heads, self.k_dim).astype(mx.float32)
         value = value.reshape(batch, length, self.num_v_heads, self.v_dim).astype(mx.float32)
         query, key = normalize_qk(query, key, inv_scale=self.k_dim**-0.5, eps=1e-6)
+        if length > CONV_SLICE_TOKENS:
+            mx.eval(query, key, value)
         out, _ = gated_delta_update(
             query,
             key,

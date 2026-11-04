@@ -32,8 +32,10 @@ def load_weights(path: Path, dtype: mx.Dtype) -> dict[str, mx.array]:
         tensors = mx.load(str(path / filename))
         if not isinstance(tensors, dict):
             raise TypeError(f"Expected named tensors in {filename}")
-        for key, value in tensors.items():
+        for key in list(tensors):
+            value = tensors.pop(key)
             weights[key] = value if key.startswith(_KEEP_FP32) else value.astype(dtype)
+            mx.eval(weights[key])
     missing = set(weight_map) - set(weights)
     if missing:
         raise ValueError(f"Checkpoint is missing tensors: {sorted(missing)[:5]}")
