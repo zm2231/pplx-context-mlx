@@ -31,11 +31,35 @@ Measured against the upstream PyTorch model at revision `6d1fddab`, FP32 on CPU,
 | `float32` (default) | 1 step | 0.999998 | 2.38 GB |
 | `float16` | 1 step | 0.99978 | 1.19 GB |
 
-Both rows compare against upstream at FP32. Image pixels match upstream byte for byte on every fixture. Details are in `reports/parity-*.json`; regenerate with `scripts/make_reference.py` and `scripts/parity_report.py`.
+Both rows compare against upstream at FP32. Image pixels match upstream byte for byte on every fixture. On 48 real ViDoRe-V3 page images (384 band vectors), MLX `float32` stays within one int8 step with a lowest cosine of 0.9999986. Upstream on transformers 5.22.1 stays within one int8 step of the recorded 5.4.0 fixtures, once its missing `config._commit_hash` is set. The reference ran on CPU, with upstream's PyTorch fallback rather than its CUDA fast path.
+
+`scripts/fault_injection.py` breaks nine parts of the model on purpose and confirms the vectors catch each one. Details are in `reports/parity-*.json`; regenerate with `scripts/make_reference.py` and `scripts/parity_report.py`.
 
 ## Retrieval
 
-[ConTEB](https://github.com/illuin-tech/conteb) nDCG@10, on the official task splits, against Table 5 of the [paper](https://arxiv.org/abs/2610.38854). Reproduce with `evals/conteb.py`.
+Scored against the tables in the [paper](https://arxiv.org/abs/2610.38854). Reproduce with `evals/`.
+
+### ViDoRe-V3, text to Markdown
+
+Whole pages, one chunk per page, nDCG@10 averaged over six languages, 18,252 pages. This setting has no chunker to choose, so it is the cleanest comparison (paper Table 12).
+
+| Task | Paper | MLX `float32` |
+|---|---:|---:|
+| Finance (EN) | 59.14 | 59.19 |
+| Finance (FR) | 43.51 | 43.54 |
+| Industrial | 43.47 | 43.45 |
+| Pharmaceuticals | 63.37 | 63.44 |
+| Computer science | 70.69 | 70.66 |
+| HR | 56.22 | 56.25 |
+| Energy | 63.62 | 63.64 |
+| Physics | 46.47 | 46.35 |
+| Average | 55.81 | 55.81 |
+
+With 128-token chunks (paper Table 13) the average is 58.33 against 58.51. The paper's chunker is not public, so this run uses fixed token slices.
+
+### ConTEB
+
+nDCG@10 on the official task splits (paper Table 5).
 
 | Task | Paper | MLX `float32` | MLX `float16` |
 |---|---:|---:|---:|
@@ -63,18 +87,35 @@ ESG is the one large gap, and it is not specific to this port: upstream's PyTorc
 
 So more context is not automatically better on this task. Which setting the paper used for ESG is not stated, and one query is worth about 2.8 points.
 
+## Speed
+
+On an M4 Pro with 64 GB, with the machine otherwise idle. MLX values are medians of three runs. Upstream ran on CPU at its best thread count for each workload, because 1 thread was fastest for short inputs and 4 to 6 for long ones. No CUDA comparison was run.
+
+| Workload | MLX `float16` | MLX `float32` | Upstream CPU |
+|---|---:|---:|---:|
+| One query | 7.6 ms | 11.6 ms | 75.5 ms |
+| Queries per second, batches of 32 | 597 | 515 | 50 |
+| 224-token document | 0.031 s | 0.033 s | 0.165 s |
+| 1,785-token document | 0.21 s | 0.24 s | 1.21 s |
+| 7,137-token document | 1.19 s | 1.45 s | 4.62 s |
+| A4 page, 8 bands | 0.90 s | 1.05 s | 4.11 s |
+
+Results are in `reports/benchmark/`. Reproduce with `scripts/benchmark.py`.
+
 ## Memory
 
 MLX's buffer cache is process-wide and otherwise grows far past the model's needs, reaching about 50 GB on a 64 GB Mac in a run that was then killed with SIGKILL; with the cap, the same workload completes. `load_model` caps it at 1 GB by default; set `cache_limit_mb` to change it. Peak footprints below are measured from the OS and include that cache.
 
-| Tokens | `float16` peak | `float32` peak |
-|---:|---:|---:|
-| 13,681 | 4.1 GB | 6.1 GB |
-| 29,521 | 5.3 GB | 9.0 GB |
-| 59,041 | 8.0 GB | |
-| 119,041 | 13.2 GB | |
+| Tokens | `float16` time | `float16` peak | `float32` time | `float32` peak |
+|---:|---:|---:|---:|---:|
+| 13,681 | 3.0 s | 4.1 GB | 3.8 s | 6.0 GB |
+| 29,521 | 10.8 s | 5.3 GB | 17.9 s | 9.1 GB |
+| 59,041 | 42.0 s | 8.0 GB | | |
+| 119,041 | 171 s | 13.2 GB | | |
 
-Attention scores queries in slices, so memory stays far below the square of the document length. Vector accuracy against upstream is verified up to 13,871 tokens. Results are in `reports/`.
+Upstream on CPU measured a lower footprint on the speed workloads, 2.5 GB against 5.5 GB for MLX `float32`. No memory advantage over upstream is claimed.
+
+Attention scores queries in slices, so memory stays far below the square of the document length. Vector accuracy against upstream is verified up to 13,871 tokens. Very long inputs are possible, but they are not automatically better; see ESG above. Results are in `reports/`.
 
 ## Scope
 

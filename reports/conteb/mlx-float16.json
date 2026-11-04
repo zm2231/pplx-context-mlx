@@ -1,7 +1,7 @@
 {
   "runtime": "mlx-float16",
   "window_tokens": null,
-  "commit": "",
+  "commit": "3488fe5",
   "platform": "macOS-27.0.1-arm64-arm-64bit",
   "average_ndcg_at_10": 78.94369512796402,
   "paper_average_ndcg_at_10": 80.7,

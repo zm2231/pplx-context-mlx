@@ -1,0 +1,138 @@
+{
+  "dtype": "float32",
+  "chunk_tokens": 128,
+  "commit": "3488fe5",
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "average_ndcg_at_10": 58.33167706171499,
+  "paper_average_ndcg_at_10": 58.50625,
+  "tasks": {
+    "finance_en": {
+      "paper_ndcg_at_10": 62.52,
+      "pages": 2942,
+      "chunks": 23268,
+      "queries": 1854,
+      "ndcg_at_10": 61.99864852634824,
+      "languages": {
+        "english": 67.51233784893421,
+        "french": 60.949851172348865,
+        "german": 59.7647794713233,
+        "italian": 61.24073608721956,
+        "portuguese": 61.313637684572356,
+        "spanish": 61.21054889369116
+      },
+      "document_seconds": 402.89944874998764
+    },
+    "finance_fr": {
+      "paper_ndcg_at_10": 47.56,
+      "pages": 2384,
+      "chunks": 23053,
+      "queries": 1920,
+      "ndcg_at_10": 47.22285134631303,
+      "languages": {
+        "english": 46.732681014831925,
+        "french": 48.83515091089159,
+        "german": 45.60325827290157,
+        "italian": 47.83689191085587,
+        "portuguese": 46.579856318631236,
+        "spanish": 47.74926964976592
+      },
+      "document_seconds": 415.39340775000164
+    },
+    "industrial": {
+      "paper_ndcg_at_10": 45.26,
+      "pages": 5244,
+      "chunks": 26666,
+      "queries": 1698,
+      "ndcg_at_10": 45.8095976450227,
+      "languages": {
+        "english": 50.633737160908645,
+        "french": 45.06069809786845,
+        "german": 44.288057210993706,
+        "italian": 43.75454859853266,
+        "portuguese": 45.01280024500448,
+        "spanish": 46.107744556828195
+      },
+      "document_seconds": 471.01988762500696
+    },
+    "pharmaceuticals": {
+      "paper_ndcg_at_10": 63.96,
+      "pages": 2313,
+      "chunks": 7397,
+      "queries": 2184,
+      "ndcg_at_10": 63.92283173144923,
+      "languages": {
+        "english": 65.20356225976225,
+        "french": 64.02622842620653,
+        "german": 63.000847525267034,
+        "italian": 63.91299396624163,
+        "portuguese": 63.93338265889482,
+        "spanish": 63.45997555232308
+      },
+      "document_seconds": 123.76016145899484
+    },
+    "computer_science": {
+      "paper_ndcg_at_10": 73.4,
+      "pages": 1360,
+      "chunks": 6322,
+      "queries": 1290,
+      "ndcg_at_10": 73.05977275724513,
+      "languages": {
+        "english": 75.04146425494896,
+        "french": 73.06063059959432,
+        "german": 72.41593326308295,
+        "italian": 73.20335057359098,
+        "portuguese": 72.5324298082294,
+        "spanish": 72.10482804402419
+      },
+      "document_seconds": 103.84419625000737
+    },
+    "hr": {
+      "paper_ndcg_at_10": 60.73,
+      "pages": 1110,
+      "chunks": 8384,
+      "queries": 1908,
+      "ndcg_at_10": 60.35765080510516,
+      "languages": {
+        "english": 63.42634225423107,
+        "french": 59.6486340757297,
+        "german": 60.178532120747676,
+        "italian": 59.205713725646426,
+        "portuguese": 59.76979892119384,
+        "spanish": 59.9168837330822
+      },
+      "document_seconds": 148.72097345799557
+    },
+    "energy": {
+      "paper_ndcg_at_10": 67.83,
+      "pages": 2225,
+      "chunks": 14470,
+      "queries": 1848,
+      "ndcg_at_10": 67.72583523056089,
+      "languages": {
+        "english": 67.45091721754358,
+        "french": 69.5405145386915,
+        "german": 66.85322264066738,
+        "italian": 67.55658921169444,
+        "portuguese": 66.78577642671605,
+        "spanish": 68.16799134805234
+      },
+      "document_seconds": 241.96807166699728
+    },
+    "physics": {
+      "paper_ndcg_at_10": 46.79,
+      "pages": 1674,
+      "chunks": 3506,
+      "queries": 1812,
+      "ndcg_at_10": 46.55622845167557,
+      "languages": {
+        "english": 45.92034799685688,
+        "french": 47.10339326639296,
+        "german": 45.589152345547284,
+        "italian": 46.50537412061889,
+        "portuguese": 47.32393555143726,
+        "spanish": 46.89516742920019
+      },
+      "document_seconds": 57.455596625004546
+    }
+  }
+}

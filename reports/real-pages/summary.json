@@ -1,0 +1,7 @@
+{
+  "pages": 48,
+  "vectors": 384,
+  "max_int8_error": 1.0,
+  "min_cosine": 0.9999986290931702,
+  "min_exact_fraction": 0.9993896484375
+}
