@@ -1,6 +1,6 @@
 {
   "dtype": "float32",
-  "commit": "6be24e7ce90952c4443b108b74cd593c85de9b62",
+  "commit": "48c2118a348ffe252bf480e4c74a9d8c6a803fc9",
   "mlx": "0.32.4",
   "platform": "macOS-27.0.1-arm64-arm-64bit",
   "reference": {
