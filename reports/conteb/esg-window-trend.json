@@ -1,0 +1,44 @@
+{
+  "task": "esg",
+  "metric": "ndcg_at_10",
+  "paper": 67.3,
+  "queries": 36,
+  "note": "Documents split between chunks into windows of at most this many tokens. One query is worth about 2.8 points.",
+  "results": [
+    {
+      "window_tokens": "non-contextual",
+      "ndcg_at_10": 49.8
+    },
+    {
+      "window_tokens": 512,
+      "ndcg_at_10": 54.34
+    },
+    {
+      "window_tokens": 2048,
+      "ndcg_at_10": 62.44
+    },
+    {
+      "window_tokens": 4096,
+      "ndcg_at_10": 66.42
+    },
+    {
+      "window_tokens": 8192,
+      "ndcg_at_10": 62.09
+    },
+    {
+      "window_tokens": 32768,
+      "ndcg_at_10": 57.31
+    },
+    {
+      "window_tokens": "whole document",
+      "ndcg_at_10": 53.54
+    }
+  ],
+  "pooling_check": {
+    "tokens": 60217,
+    "chunks": 316,
+    "min_cosine_running_sum_vs_exact": 0.9999997615814209,
+    "int8_exact_fraction": 0.9997249554984177,
+    "whole_document_ndcg_with_exact_pooling": 53.54
+  }
+}

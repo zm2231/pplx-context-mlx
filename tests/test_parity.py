@@ -13,6 +13,7 @@ FIXTURES = Path(__file__).parent / "fixtures"
 CASES = json.loads((FIXTURES / "cases.json").read_text(encoding="utf-8"))
 QUANTIZED_MAX_ABS_ERROR = 1
 MIN_COSINE = 0.9999
+CACHE_BOUND_BYTES = 2 * 1024**3
 
 
 @pytest.fixture(scope="module")
@@ -65,6 +66,12 @@ def test_layer_states_match_reference(engine, reference):
         expected = reference[f"trace/{index}"]
         error = np.abs(np.array(state) - expected).max() / np.abs(expected).max()
         assert error < 1e-3, f"layer {index} relative error {error}"
+
+
+def test_buffer_cache_stays_within_the_limit(engine):
+    chunks = ["Researchers measured the effect across many sites and seasons. " * 20] * 40
+    engine.encode([chunks], batch_size=1)
+    assert mx.get_cache_memory() <= CACHE_BOUND_BYTES
 
 
 def test_sliced_attention_matches_whole(monkeypatch):

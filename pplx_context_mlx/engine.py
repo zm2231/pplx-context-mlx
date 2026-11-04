@@ -107,9 +107,13 @@ class ContextualEngine:
 
 
 def load_model(
-    path_or_repo: str = CHECKPOINT_0_6B, revision: str | None = None, dtype: str = "float32"
+    path_or_repo: str = CHECKPOINT_0_6B,
+    revision: str | None = None,
+    dtype: str = "float32",
+    cache_limit_mb: int = 1024,
 ) -> ContextualEngine:
     validate_dtype(dtype)
+    mx.set_cache_limit(cache_limit_mb * 1024 * 1024)
     path = resolve_checkpoint(path_or_repo, revision)
     model, config = load_checkpoint(path, dtype)
     return ContextualEngine(model, ContextualTokenizer(path, config), config)

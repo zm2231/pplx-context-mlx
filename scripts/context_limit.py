@@ -5,6 +5,7 @@ import json
 import time
 
 import mlx.core as mx
+from footprint import peak_footprint_gb
 
 from pplx_context_mlx import load_model
 
@@ -38,7 +39,8 @@ def main() -> None:
                 "seconds": round(seconds, 2),
                 "tokens_per_second": round(features["input_ids"].shape[1] / seconds),
                 "weights_gb": round(resident / 1e9, 2),
-                "peak_metal_gb": round(mx.get_peak_memory() / 1e9, 2),
+                "peak_active_gb": round(mx.get_peak_memory() / 1e9, 2),
+                "peak_footprint_gb": round(peak_footprint_gb(), 2),
             }
         ),
         flush=True,

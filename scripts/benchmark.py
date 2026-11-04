@@ -9,6 +9,7 @@ import subprocess
 import time
 from pathlib import Path
 
+from footprint import peak_footprint_gb
 from PIL import Image
 
 SENTENCE = "Researchers measured the effect across many sites, and it remained stable over several long seasons. "
@@ -62,7 +63,7 @@ def _mlx(dtype: str) -> dict:
         lambda rows: engine.encode(rows, batch_size=len(rows)),
         lambda images: engine.encode_images(images),
     )
-    return {"runtime": f"mlx-{dtype}", "load_s": load_seconds, "peak_metal_gb": mx.get_peak_memory() / 1e9, **results}
+    return {"runtime": f"mlx-{dtype}", "load_s": load_seconds, "peak_active_gb": mx.get_peak_memory() / 1e9, **results}
 
 
 def _torch(threads: list[int]) -> dict:
@@ -106,6 +107,7 @@ def main() -> None:
     memory = int(subprocess.run(["sysctl", "-n", "hw.memsize"], capture_output=True, text=True, check=True).stdout)
     result.update(
         {
+            "peak_footprint_gb": peak_footprint_gb(),
             "chip": chip.strip(),
             "memory_gb": memory // 2**30,
             "platform": platform.platform(),

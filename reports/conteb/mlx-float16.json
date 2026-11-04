@@ -1,0 +1,82 @@
+{
+  "runtime": "mlx-float16",
+  "window_tokens": null,
+  "commit": "",
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "average_ndcg_at_10": 78.94369512796402,
+  "paper_average_ndcg_at_10": 80.7,
+  "tasks": {
+    "geography": {
+      "paper_ndcg_at_10": 94.1,
+      "documents": 530,
+      "chunks": 2291,
+      "queries": 5283,
+      "ndcg_at_10": 94.09637451171875,
+      "document_seconds": 31.15700858400669,
+      "query_seconds": 11.316783582995413
+    },
+    "esg": {
+      "paper_ndcg_at_10": 67.3,
+      "documents": 30,
+      "chunks": 3702,
+      "queries": 36,
+      "ndcg_at_10": 52.73591876029968,
+      "document_seconds": 295.2863867499982,
+      "query_seconds": 0.1027873749990249
+    },
+    "insurance": {
+      "paper_ndcg_at_10": 88.0,
+      "documents": 1,
+      "chunks": 60,
+      "queries": 120,
+      "ndcg_at_10": 88.92790079116821,
+      "document_seconds": 0.8260986670065904,
+      "query_seconds": 0.24953904199355748
+    },
+    "football": {
+      "paper_ndcg_at_10": 79.2,
+      "documents": 301,
+      "chunks": 6259,
+      "queries": 2682,
+      "ndcg_at_10": 79.15833592414856,
+      "document_seconds": 65.28749866600265,
+      "query_seconds": 7.243313583006966
+    },
+    "squad": {
+      "paper_ndcg_at_10": 87.3,
+      "documents": 2067,
+      "chunks": 17562,
+      "queries": 2067,
+      "ndcg_at_10": 87.23511099815369,
+      "document_seconds": 55.410351667000214,
+      "query_seconds": 4.2949339160113595
+    },
+    "narrativeqa": {
+      "paper_ndcg_at_10": 83.4,
+      "documents": 355,
+      "chunks": 1750,
+      "queries": 8575,
+      "ndcg_at_10": 83.40341448783875,
+      "document_seconds": 30.411996915994678,
+      "query_seconds": 26.598839042009786
+    },
+    "mldr": {
+      "paper_ndcg_at_10": 89.8,
+      "documents": 100,
+      "chunks": 1536,
+      "queries": 100,
+      "ndcg_at_10": 89.7788941860199,
+      "document_seconds": 34.51976445800392,
+      "query_seconds": 0.26165629099705257
+    },
+    "covid": {
+      "paper_ndcg_at_10": 56.1,
+      "documents": 115,
+      "chunks": 3351,
+      "queries": 1111,
+      "ndcg_at_10": 56.213611364364624,
+      "document_seconds": 85.52613816699886,
+      "query_seconds": 2.4885566660086624
+    }
+  }
+}

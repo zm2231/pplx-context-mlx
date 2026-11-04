@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 import platform
+import subprocess
 import time
 from importlib.metadata import version
 from pathlib import Path
@@ -99,6 +100,7 @@ def main() -> None:
     results = _measure(engine, cases, reference) + _measure_images(engine, image_cases, reference)
     report = {
         "dtype": args.dtype,
+        "commit": subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True, check=False).stdout.strip(),
         "mlx": version("mlx"),
         "platform": platform.platform(),
         "reference": json.loads((FIXTURES / "reference.json").read_text(encoding="utf-8")),
