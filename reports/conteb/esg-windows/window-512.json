@@ -1,0 +1,19 @@
+{
+  "runtime": "mlx-float32",
+  "window_tokens": 512,
+  "commit": "6be24e7ce90952c4443b108b74cd593c85de9b62",
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "average_ndcg_at_10": 54.33821678161621,
+  "paper_average_ndcg_at_10": 80.7,
+  "tasks": {
+    "esg": {
+      "paper_ndcg_at_10": 67.3,
+      "documents": 1845,
+      "chunks": 3702,
+      "queries": 36,
+      "ndcg_at_10": 54.33821678161621,
+      "document_seconds": 129.91298679099418,
+      "query_seconds": 0.14165904199762736
+    }
+  }
+}

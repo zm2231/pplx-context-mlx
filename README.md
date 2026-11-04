@@ -85,7 +85,7 @@ ESG is the one large gap, and it is not specific to this port: upstream's PyTorc
 | 32,768 | 57.3 |
 | Whole document | 53.5 |
 
-So more context is not automatically better on this task. Which setting the paper used for ESG is not stated, and one query is worth about 2.8 points.
+So more context is not automatically better on this task. Which setting the paper used for ESG is not stated, and one query is worth about 2.8 points. Windows split documents between chunks (`--window-tokens`); results are in `reports/conteb/esg-windows/`, and the whole-document row is in `reports/conteb/mlx-float32.json`.
 
 ## Speed
 
