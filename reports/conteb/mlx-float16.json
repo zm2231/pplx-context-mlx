@@ -1,10 +1,10 @@
 {
   "runtime": "mlx-float16",
   "window_tokens": null,
-  "commit": "bc3e23a5e0f3018540a6303b8591dc9c08ce7c87",
+  "commit": "b0a6ab0c663e7431d681cd721dd337faf0adef64",
   "platform": "macOS-27.0.1-arm64-arm-64bit",
-  "average_ndcg_at_10": 78.94369512796402,
-  "paper_average_ndcg_at_10": 80.7,
+  "average_ndcg_at_10": 78.94197627902031,
+  "paper_average_ndcg_at_10": 80.65,
   "tasks": {
     "geography": {
       "paper_ndcg_at_10": 94.1,
@@ -12,8 +12,8 @@
       "chunks": 2291,
       "queries": 5283,
       "ndcg_at_10": 94.09637451171875,
-      "document_seconds": 39.040317167004105,
-      "query_seconds": 12.887320416004513
+      "document_seconds": 32.48352383400197,
+      "query_seconds": 11.80294095800491
     },
     "esg": {
       "paper_ndcg_at_10": 67.3,
@@ -21,8 +21,8 @@
       "chunks": 3702,
       "queries": 36,
       "ndcg_at_10": 52.73591876029968,
-      "document_seconds": 353.2787841249956,
-      "query_seconds": 0.12109241700090934
+      "document_seconds": 271.13374029198894,
+      "query_seconds": 0.10146200002054684
     },
     "insurance": {
       "paper_ndcg_at_10": 88.0,
@@ -30,17 +30,17 @@
       "chunks": 60,
       "queries": 120,
       "ndcg_at_10": 88.92790079116821,
-      "document_seconds": 0.8584055839892244,
-      "query_seconds": 0.2640559999999823
+      "document_seconds": 0.8753123750211671,
+      "query_seconds": 0.2571482500061393
     },
     "football": {
       "paper_ndcg_at_10": 79.2,
       "documents": 301,
       "chunks": 6259,
       "queries": 2682,
-      "ndcg_at_10": 79.15833592414856,
-      "document_seconds": 76.62153079200652,
-      "query_seconds": 8.383427000007941
+      "ndcg_at_10": 79.14458513259888,
+      "document_seconds": 69.11809683300089,
+      "query_seconds": 7.493048958014697
     },
     "squad": {
       "paper_ndcg_at_10": 87.3,
@@ -48,8 +48,8 @@
       "chunks": 17562,
       "queries": 2067,
       "ndcg_at_10": 87.23511099815369,
-      "document_seconds": 60.64359962499293,
-      "query_seconds": 5.01913370800321
+      "document_seconds": 53.83844550000504,
+      "query_seconds": 4.562741083005676
     },
     "narrativeqa": {
       "paper_ndcg_at_10": 83.4,
@@ -57,8 +57,8 @@
       "chunks": 1750,
       "queries": 8575,
       "ndcg_at_10": 83.40341448783875,
-      "document_seconds": 34.533042042006855,
-      "query_seconds": 28.524602083998616
+      "document_seconds": 31.775545916025294,
+      "query_seconds": 25.392298499995377
     },
     "mldr": {
       "paper_ndcg_at_10": 89.8,
@@ -66,8 +66,8 @@
       "chunks": 1536,
       "queries": 100,
       "ndcg_at_10": 89.7788941860199,
-      "document_seconds": 39.945067791995825,
-      "query_seconds": 0.3072001249965979
+      "document_seconds": 39.24817466601962,
+      "query_seconds": 0.3467300839838572
     },
     "covid": {
       "paper_ndcg_at_10": 56.1,
@@ -75,8 +75,8 @@
       "chunks": 3351,
       "queries": 1111,
       "ndcg_at_10": 56.213611364364624,
-      "document_seconds": 100.26798475001124,
-      "query_seconds": 2.8051660830096807
+      "document_seconds": 109.0971161670168,
+      "query_seconds": 3.602311541995732
     }
   }
 }

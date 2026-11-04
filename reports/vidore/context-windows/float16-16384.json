@@ -1,0 +1,43 @@
+{
+  "dtype": "float16",
+  "chunk_tokens": 128,
+  "context_tokens": 16384,
+  "commit": "b0a6ab0c663e7431d681cd721dd337faf0adef64",
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "average_ndcg_at_10": 55.22480614154529,
+  "paper_average_ndcg_at_10": 67.065,
+  "tasks": {
+    "computer_science": {
+      "paper_ndcg_at_10": 73.4,
+      "pages": 1360,
+      "chunks": 6322,
+      "queries": 1290,
+      "ndcg_at_10": 61.47331877256079,
+      "languages": {
+        "english": 64.55375564624539,
+        "french": 60.72331954125399,
+        "german": 59.508702648689,
+        "italian": 61.16175361624919,
+        "portuguese": 61.68407470060176,
+        "spanish": 61.20830648232538
+      },
+      "document_seconds": 172.33421820800868
+    },
+    "hr": {
+      "paper_ndcg_at_10": 60.73,
+      "pages": 1110,
+      "chunks": 8384,
+      "queries": 1908,
+      "ndcg_at_10": 48.97629351052978,
+      "languages": {
+        "english": 52.19197462742928,
+        "french": 48.16845444578407,
+        "german": 48.980740795764646,
+        "italian": 47.487584211162,
+        "portuguese": 48.69074234036256,
+        "spanish": 48.338264642676066
+      },
+      "document_seconds": 233.6559864160081
+    }
+  }
+}

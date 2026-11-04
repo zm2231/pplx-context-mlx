@@ -1,5 +1,5 @@
 {
-  "commit": "fd5617b24bec115186de6bf91c3b71abb482443e",
+  "commit": "b0a6ab0c663e7431d681cd721dd337faf0adef64",
   "mlx": "0.32.4",
   "baseline_int8_error": 1.0,
   "injected_int8_error": {
