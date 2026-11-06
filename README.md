@@ -2,8 +2,6 @@
 
 Perplexity's [pplx-embed-v2-context-0.6b](https://huggingface.co/perplexity-ai/pplx-embed-v2-context-0.6b) contextual embeddings on Apple silicon. Each chunk's vector sees the rest of its document, and the upstream checkpoint loads unchanged, with no conversion step, PyTorch, or Transformers.
 
-Independent project; not affiliated with or endorsed by Perplexity.
-
 ## Quick start
 
 ```bash
@@ -22,7 +20,7 @@ query = engine.encode_queries([["What does the second chunk see?"]], normalize_e
 scores = chunks[0] @ query[0][0]
 ```
 
-Each document is a list of chunks, and you get one 1,024-dimensional vector per chunk. Pass `dtype="float16"` to `load_model` for lower memory and a faster model with nearly the same retrieval scores.
+Each document is a list of chunks, and you get one 1,024-dimensional vector per chunk. Pass `dtype="float16"` to `load_model` for lower memory and a faster model with nearly the same retrieval scores. For a 1.1 GB download instead of 2.4 GB, load the pre-cast copy, which gives bit-identical vectors: `load_model("zainmerchan/pplx-embed-v2-context-0.6b-mlx", dtype="float16")`.
 
 **Keep context windows small.** Send one logical unit per document, such as a page or section, up to about 2,048 tokens, and split longer documents into several. Retrieval gets worse as context grows; see [context windows](#context-windows).
 
@@ -193,7 +191,7 @@ Peaks here are OS footprint, including the cache. Vector accuracy against upstre
 
 - **Models:** tested with `pplx-embed-v2-context-0.6b` only. Full-table ViDoRe-V3 comparisons were run at `float32`.
 - **Inputs:** text and page images. Video is not supported.
-- **Weights:** this package contains none and downloads them from Perplexity's repository.
-- **License:** the code is MIT. Perplexity's cards for `pplx-embed-v2-context-9b` and `pplx-embed-v2-late-0.6b` declare MIT; the `0.6b` context card does not currently carry a license tag.
+- **Weights:** the package contains none. `load_model()` downloads Perplexity's checkpoint; a `float16` copy is on [Hugging Face](https://huggingface.co/zainmerchan/pplx-embed-v2-context-0.6b-mlx).
+- **License:** MIT, for the code and the `float16` copy. Perplexity's 0.6B context card had no license tag as of 2026-11-06 (revision `6d1fddab`); their 9B context and late-0.6B cards declare MIT.
 
 Third-party notices are in `NOTICE`.
